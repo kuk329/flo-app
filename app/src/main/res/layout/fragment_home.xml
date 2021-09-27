@@ -178,7 +178,7 @@
             app:layout_constraintEnd_toStartOf="@id/home_today_release_music_genre2_tv"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="20dp"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textColor="@color/purple_500"/>
         <TextView
             android:id="@+id/home_today_release_music_genre2_tv"
@@ -189,7 +189,7 @@
             app:layout_constraintEnd_toStartOf="@id/home_today_release_music_genre3_tv"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="20dp"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textColor="#000"/>
         <TextView
             android:id="@+id/home_today_release_music_genre3_tv"
@@ -200,7 +200,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="20dp"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textColor="#000"/>
         <!-- 오늘 발매 음악 -->
         <HorizontalScrollView
@@ -216,18 +216,28 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                
-                <ImageView
-                    android:id="@+id/home_today_release_music1_iv"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="10dp"
+                    android:id="@+id/home_today_release_music1_cv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:src="@drawable/today_release_music3"
+                    app:layout_constraintVertical_bias="0.0"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintTop_toTopOf="parent">
 
+                        <ImageView
+                            app:layout_constraintVertical_bias="0.0"
+                            android:id="@+id/home_today_release_music1_iv"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:src="@drawable/today_release_music3"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                </androidx.cardview.widget.CardView>
                 <TextView
                     android:id="@+id/home_today_release_music1_tv"
                     android:layout_width="wrap_content"
@@ -236,9 +246,8 @@
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
                     android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="@+id/home_today_release_music1_iv"
-                    app:layout_constraintTop_toBottomOf="@+id/home_today_release_music1_iv" />
-
+                    app:layout_constraintStart_toStartOf="@+id/home_today_release_music1_cv"
+                    app:layout_constraintTop_toBottomOf="@+id/home_today_release_music1_cv" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -247,15 +256,31 @@
                     app:layout_constraintStart_toStartOf="@+id/home_today_release_music1_tv"
                     app:layout_constraintTop_toBottomOf="@+id/home_today_release_music1_tv" />
 
-                <ImageView
-                    android:id="@+id/home_today_release_music2_iv"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_marginLeft="20dp"
-                    android:src="@drawable/today_release_music1"
-                    app:layout_constraintBottom_toBottomOf="@+id/home_today_release_music1_iv"
-                    app:layout_constraintLeft_toRightOf="@+id/home_today_release_music1_iv"
-                    app:layout_constraintTop_toTopOf="@+id/home_today_release_music1_iv" />
+
+
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="10dp"
+                    android:id="@+id/home_today_release_music2_cv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintBottom_toBottomOf="@+id/home_today_release_music1_cv"
+                    app:layout_constraintStart_toEndOf="@+id/home_today_release_music1_cv"
+                    app:layout_constraintTop_toTopOf="@+id/home_today_release_music1_cv">
+
+
+                    <ImageView
+                        android:id="@+id/home_today_release_music2_iv"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:src="@drawable/today_release_music1"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+                </androidx.cardview.widget.CardView>
+
                 <TextView
                     android:id="@+id/home_today_release_music2_tv"
                     android:layout_width="wrap_content"
@@ -264,9 +289,8 @@
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
                     android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="@+id/home_today_release_music2_iv"
-                    app:layout_constraintTop_toBottomOf="@+id/home_today_release_music2_iv" />
-
+                    app:layout_constraintStart_toStartOf="@+id/home_today_release_music2_cv"
+                    app:layout_constraintTop_toBottomOf="@+id/home_today_release_music2_cv" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -276,15 +300,26 @@
                     app:layout_constraintTop_toBottomOf="@+id/home_today_release_music2_tv" />
 
 
-                <ImageView
-                    android:id="@+id/home_today_release_music3_iv"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:src="@drawable/today_release_music2"
-                    android:layout_marginLeft="20dp"
-                    app:layout_constraintLeft_toRightOf="@+id/home_today_release_music2_iv"
-                    app:layout_constraintBottom_toBottomOf="@+id/home_today_release_music2_iv"
-                    app:layout_constraintTop_toTopOf="@+id/home_today_release_music2_iv"/>
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="10dp"
+                    android:id="@+id/home_today_release_music3_cv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintBottom_toBottomOf="@+id/home_today_release_music2_cv"
+                    app:layout_constraintStart_toEndOf="@+id/home_today_release_music2_cv"
+                    app:layout_constraintTop_toTopOf="@+id/home_today_release_music2_cv">
+                    <ImageView
+                        app:layout_constraintVertical_bias="0.0"
+                        android:id="@+id/home_today_release_music3_iv"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:src="@drawable/today_release_music2"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+                </androidx.cardview.widget.CardView>
 
                 <TextView
                     android:id="@+id/home_today_release_music3_tv"
@@ -294,9 +329,8 @@
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
                     android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="@+id/home_today_release_music3_iv"
-                    app:layout_constraintTop_toBottomOf="@+id/home_today_release_music2_iv" />
-
+                    app:layout_constraintStart_toStartOf="@+id/home_today_release_music3_cv"
+                    app:layout_constraintTop_toBottomOf="@+id/home_today_release_music3_cv" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -305,18 +339,27 @@
                     app:layout_constraintStart_toStartOf="@+id/home_today_release_music3_tv"
                     app:layout_constraintTop_toBottomOf="@+id/home_today_release_music3_tv" />
 
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="10dp"
+                    android:id="@+id/home_today_release_music4_cv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintBottom_toBottomOf="@+id/home_today_release_music3_cv"
+                    app:layout_constraintStart_toEndOf="@+id/home_today_release_music3_cv"
+                    app:layout_constraintTop_toTopOf="@+id/home_today_release_music3_cv">
 
-
-                <ImageView
-                    android:id="@+id/home_today_release_music4_iv"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:src="@drawable/img_album_exp2"
-                    android:layout_marginLeft="20dp"
-                    app:layout_constraintLeft_toRightOf="@+id/home_today_release_music3_iv"
-                    app:layout_constraintBottom_toBottomOf="@+id/home_today_release_music3_iv"
-                    app:layout_constraintTop_toTopOf="@+id/home_today_release_music3_iv"/>
-
+                    <ImageView
+                        app:layout_constraintVertical_bias="0.0"
+                        android:id="@+id/home_today_release_music4_iv"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:src="@drawable/img_album_exp2"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+                </androidx.cardview.widget.CardView>
 
                 <TextView
                     android:id="@+id/home_today_release_music4_tv"
@@ -326,8 +369,8 @@
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
                     android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="@+id/home_today_release_music4_iv"
-                    app:layout_constraintTop_toBottomOf="@+id/home_today_release_music4_iv" />
+                    app:layout_constraintStart_toStartOf="@+id/home_today_release_music4_cv"
+                    app:layout_constraintTop_toBottomOf="@+id/home_today_release_music4_cv" />
 
                 <TextView
                     android:layout_width="wrap_content"
