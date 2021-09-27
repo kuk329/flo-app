@@ -1,6 +1,7 @@
 package com.example.flo
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.flo.databinding.ActivityMainBinding
 
@@ -11,7 +12,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+
         initNavigation()
+
+
+
 
         binding.mainBnv.setOnItemSelectedListener {
             when (it.itemId) {
@@ -46,6 +53,15 @@ class MainActivity : AppCompatActivity() {
             }
             false
         }
+
+//        val window =window
+//        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+
+//        window.setFlags(
+//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+//        )
 
     }
 

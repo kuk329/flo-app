@@ -14,7 +14,7 @@
         <ImageView
             android:id="@+id/home_background_iv"
             android:layout_width="match_parent"
-            android:layout_height="430dp"
+            android:layout_height="400dp"
             android:src="@drawable/img_default_4_x_1"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
@@ -132,7 +132,7 @@
             android:src="@drawable/img_album_exp2"
             app:layout_constraintBottom_toBottomOf="@+id/home_background_iv"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="40dp"
             android:layout_marginStart="20dp"/>
         <TextView
             android:id="@+id/home_album_exp_text_01_tv"
@@ -245,7 +245,7 @@
                     android:text="My Universe"
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     app:layout_constraintStart_toStartOf="@+id/home_today_release_music1_cv"
                     app:layout_constraintTop_toBottomOf="@+id/home_today_release_music1_cv" />
                 <TextView
@@ -288,7 +288,7 @@
                     android:text="CRAZY IN LOVE"
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     app:layout_constraintStart_toStartOf="@+id/home_today_release_music2_cv"
                     app:layout_constraintTop_toBottomOf="@+id/home_today_release_music2_cv" />
                 <TextView
@@ -328,7 +328,7 @@
                     android:text="9월 24일"
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     app:layout_constraintStart_toStartOf="@+id/home_today_release_music3_cv"
                     app:layout_constraintTop_toBottomOf="@+id/home_today_release_music3_cv" />
                 <TextView
@@ -368,7 +368,7 @@
                     android:text="라일락"
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     app:layout_constraintStart_toStartOf="@+id/home_today_release_music4_cv"
                     app:layout_constraintTop_toBottomOf="@+id/home_today_release_music4_cv" />
 
@@ -434,16 +434,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/home_podcast1_iv"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                <!--- 1 -->
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="10dp"
+                    android:id="@+id/home_podcast1_cv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:src="@drawable/img_potcast_exp"
+                    app:layout_constraintVertical_bias="0.0"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/home_podcast1_iv"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:src="@drawable/img_potcast_exp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                </androidx.cardview.widget.CardView>
+
 
                 <TextView
                     android:id="@+id/home_podcast1_tv"
@@ -452,9 +466,9 @@
                     android:text="제목"
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="@+id/home_podcast1_iv"
-                    app:layout_constraintTop_toBottomOf="@+id/home_podcast1_iv" />
+                    android:textSize="17sp"
+                    app:layout_constraintStart_toStartOf="@+id/home_podcast1_cv"
+                    app:layout_constraintTop_toBottomOf="@+id/home_podcast1_cv" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -464,15 +478,31 @@
                     app:layout_constraintStart_toStartOf="@+id/home_podcast1_tv"
                     app:layout_constraintTop_toBottomOf="@+id/home_podcast1_tv" />
 
-                <ImageView
-                    android:id="@+id/home_podcast2_iv"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_marginLeft="20dp"
-                    android:src="@drawable/img_potcast_exp"
-                    app:layout_constraintBottom_toBottomOf="@+id/home_podcast1_iv"
-                    app:layout_constraintLeft_toRightOf="@+id/home_podcast1_iv"
-                    app:layout_constraintTop_toTopOf="@+id/home_podcast1_iv" />
+                <!-- 2-->
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="10dp"
+                    android:id="@+id/home_podcast2_cv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintBottom_toBottomOf="@+id/home_podcast1_cv"
+                    app:layout_constraintStart_toEndOf="@+id/home_podcast1_cv"
+                    app:layout_constraintTop_toTopOf="@+id/home_podcast1_cv">
+
+                    <ImageView
+                        android:id="@+id/home_podcast2_iv"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:src="@drawable/img_potcast_exp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                </androidx.cardview.widget.CardView>
+
+
                 <TextView
                     android:id="@+id/home_podcast2_tv"
                     android:layout_width="wrap_content"
@@ -480,9 +510,9 @@
                     android:text="제목"
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="@+id/home_podcast2_iv"
-                    app:layout_constraintTop_toBottomOf="@+id/home_podcast2_iv" />
+                    android:textSize="17sp"
+                    app:layout_constraintStart_toStartOf="@+id/home_podcast2_cv"
+                    app:layout_constraintTop_toBottomOf="@+id/home_podcast2_cv" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -492,16 +522,31 @@
                     app:layout_constraintStart_toStartOf="@+id/home_podcast2_tv"
                     app:layout_constraintTop_toBottomOf="@+id/home_podcast2_tv" />
 
+                <!-- 3-->
 
-                <ImageView
-                    android:id="@+id/home_podcast3_iv"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:src="@drawable/img_potcast_exp"
-                    android:layout_marginLeft="20dp"
-                    app:layout_constraintLeft_toRightOf="@+id/home_podcast2_iv"
-                    app:layout_constraintBottom_toBottomOf="@+id/home_podcast2_iv"
-                    app:layout_constraintTop_toTopOf="@+id/home_podcast2_iv"/>
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="10dp"
+                    android:id="@+id/home_podcast3_cv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintBottom_toBottomOf="@+id/home_podcast2_cv"
+                    app:layout_constraintStart_toEndOf="@+id/home_podcast2_cv"
+                    app:layout_constraintTop_toTopOf="@+id/home_podcast2_cv">
+
+                    <ImageView
+                        android:id="@+id/home_podcast3_iv"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:src="@drawable/img_potcast_exp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                </androidx.cardview.widget.CardView>
+
 
                 <TextView
                     android:id="@+id/home_podcast3_tv"
@@ -510,9 +555,9 @@
                     android:text="제목"
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="@+id/home_podcast3_iv"
-                    app:layout_constraintTop_toBottomOf="@+id/home_podcast2_iv" />
+                    android:textSize="17sp"
+                    app:layout_constraintStart_toStartOf="@+id/home_podcast3_cv"
+                    app:layout_constraintTop_toBottomOf="@+id/home_podcast3_cv" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -521,7 +566,6 @@
                     android:layout_marginTop="5dp"
                     app:layout_constraintStart_toStartOf="@+id/home_podcast3_tv"
                     app:layout_constraintTop_toBottomOf="@+id/home_podcast3_tv" />
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -555,94 +599,128 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/home_video_collection1_iv"
-                    android:layout_width="300dp"
-                    android:layout_height="150dp"
-                    android:layout_marginStart="20dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/img_video_exp"
+                <!-- 1 -->
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="10dp"
+                    android:id="@+id/home_video_collection1_cv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintVertical_bias="0.0"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/home_video_collection1_iv"
+                        android:layout_width="300dp"
+                        android:layout_height="150dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/img_video_exp"/>
+
+                </androidx.cardview.widget.CardView>
+
 
                 <TextView
                     android:id="@+id/home_video_collection1_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="제목"
+                    android:text="[MV] 피아노 치기"
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="@+id/home_video_collection1_iv"
-                    app:layout_constraintTop_toBottomOf="@+id/home_video_collection1_iv" />
+                    android:textSize="17sp"
+                    app:layout_constraintStart_toStartOf="@+id/home_video_collection1_cv"
+                    app:layout_constraintTop_toBottomOf="@+id/home_video_collection1_cv" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="가수"
+                    android:text="김00"
                     android:layout_marginTop="5dp"
                     app:layout_constraintStart_toStartOf="@+id/home_video_collection1_tv"
                     app:layout_constraintTop_toBottomOf="@+id/home_video_collection1_tv" />
 
-                <ImageView
-                    android:id="@+id/home_video_collection2_iv"
-                    android:layout_width="300dp"
-                    android:layout_height="150dp"
-                    android:layout_marginStart="20dp"
-                    android:scaleType="centerCrop"
-                    android:layout_marginLeft="18sp"
-                    android:src="@drawable/img_video_exp"
-                    app:layout_constraintBottom_toBottomOf="@+id/home_video_collection1_iv"
-                    app:layout_constraintLeft_toRightOf="@+id/home_video_collection1_iv"
-                    app:layout_constraintTop_toTopOf="@+id/home_video_collection1_iv" />
+                <!-- 2 -->
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="10dp"
+                    android:id="@+id/home_video_collection2_cv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintBottom_toBottomOf="@+id/home_video_collection1_cv"
+                    app:layout_constraintStart_toEndOf="@+id/home_video_collection1_cv"
+                    app:layout_constraintTop_toTopOf="@+id/home_video_collection1_cv">
+
+                    <ImageView
+                        android:id="@+id/home_video_collection2_iv"
+                        android:layout_width="300dp"
+                        android:layout_height="150dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/img_video_exp"/>
+
+                </androidx.cardview.widget.CardView>
+
+
                 <TextView
                     android:id="@+id/home_video_collection2_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="제목"
+                    android:text="[MV] 피아노 치기"
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="@+id/home_video_collection2_iv"
-                    app:layout_constraintTop_toBottomOf="@+id/home_video_collection2_iv" />
+                    android:textSize="17sp"
+                    app:layout_constraintStart_toStartOf="@+id/home_video_collection2_cv"
+                    app:layout_constraintTop_toBottomOf="@+id/home_video_collection2_cv" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="가수"
+                    android:text="이00"
                     android:layout_marginTop="5dp"
                     app:layout_constraintStart_toStartOf="@+id/home_video_collection2_tv"
                     app:layout_constraintTop_toBottomOf="@+id/home_video_collection2_tv" />
 
 
-                <ImageView
-                    android:id="@+id/home_video_collection3_iv"
-                    android:layout_width="300dp"
-                    android:layout_height="150dp"
-                    android:layout_marginLeft="20dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/img_video_exp"
-                    app:layout_constraintLeft_toRightOf="@+id/home_video_collection2_iv"
-                    app:layout_constraintBottom_toBottomOf="@+id/home_video_collection2_iv"
-                    app:layout_constraintTop_toTopOf="@+id/home_video_collection2_iv"/>
+
+                <!--  3 -->
+
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="10dp"
+                    android:id="@+id/home_video_collection3_cv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintBottom_toBottomOf="@+id/home_video_collection2_cv"
+                    app:layout_constraintStart_toEndOf="@+id/home_video_collection2_cv"
+                    app:layout_constraintTop_toTopOf="@+id/home_video_collection2_cv">
+
+                    <ImageView
+                        android:id="@+id/home_video_collection3_iv"
+                        android:layout_width="300dp"
+                        android:layout_height="150dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/img_video_exp"/>
+
+                </androidx.cardview.widget.CardView>
+
 
                 <TextView
                     android:id="@+id/home_video_collection3_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="제목"
+                    android:text="[MV] 피아노 치기"
                     android:textColor="#000"
                     android:layout_marginTop="10dp"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="@+id/home_video_collection3_iv"
-                    app:layout_constraintTop_toBottomOf="@+id/home_video_collection3_iv" />
+                    android:textSize="17sp"
+                    app:layout_constraintStart_toStartOf="@+id/home_video_collection3_cv"
+                    app:layout_constraintTop_toBottomOf="@+id/home_video_collection3_cv" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="가수"
+                    android:text="안00"
                     android:layout_marginTop="5dp"
                     app:layout_constraintStart_toStartOf="@+id/home_video_collection3_tv"
                     app:layout_constraintTop_toBottomOf="@+id/home_video_collection3_tv" />
@@ -654,33 +732,51 @@
 
 
 
+        <androidx.cardview.widget.CardView
+            app:cardCornerRadius="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/home_banner2_cv"
+            app:layout_constraintTop_toBottomOf="@+id/home_video_collection"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
             <ImageView
-                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
                 android:scaleType="centerCrop"
                 android:id="@+id/home_banner2_iv"
-                app:layout_constraintTop_toBottomOf="@+id/home_video_collection"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="350dp"
+
                 android:src="@drawable/discovery_banner_aos"/>
 
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            app:cardCornerRadius="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="138dp"
+            android:id="@+id/home_banner3_cv"
+            app:layout_constraintTop_toBottomOf="@+id/home_banner2_cv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
+
             <ImageView
-                android:layout_marginTop="30dp"
                 android:scaleType="centerCrop"
                 android:id="@+id/home_banner3_iv"
-                app:layout_constraintTop_toBottomOf="@+id/home_banner2_iv"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="138dp"
                 android:src="@drawable/img_home_viewpager_exp2"/>
+
+        </androidx.cardview.widget.CardView>
             <LinearLayout
-                app:layout_constraintTop_toBottomOf="@+id/home_banner3_iv"
+                app:layout_constraintTop_toBottomOf="@+id/home_banner3_cv"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:id="@+id/home_sns_icons"
@@ -706,12 +802,14 @@
 
                 <ImageView
                     android:layout_margin="20dp"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_main_twitter_btn"/>
             </LinearLayout>
 
             <TextView
+                android:textSize="12sp"
+                android:textColor="#000"
                 app:layout_constraintTop_toBottomOf="@+id/home_sns_icons"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

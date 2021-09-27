@@ -7,13 +7,74 @@
 
 
     <TextView
+        android:layout_margin="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="둘러보기 프래그먼트"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="둘러보기"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#000"/>
+
+    <HorizontalScrollView
+        android:id="@+id/search_lookaround_hs"
+        android:layout_marginTop="60dp"
+        android:scrollbars="none"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatButton
+                android:backgroundTint="#3030EE"
+                android:background="@drawable/round_button_background"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:text="차트"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:backgroundTint="#F2EFEF"
+                android:background="@drawable/round_button_background"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="영상"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:backgroundTint="#F2EFEF"
+                android:background="@drawable/round_button_background"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="장르"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:backgroundTint="#F2EFEF"
+                android:background="@drawable/round_button_background"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="상황"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:backgroundTint="#F2EFEF"
+                android:background="@drawable/round_button_background"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="분위기"/>
+
+        </LinearLayout>
+    </HorizontalScrollView>
 
 
 
