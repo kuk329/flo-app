@@ -1,24 +1,44 @@
 package com.example.flo
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.flo.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
+
+    lateinit var binding : ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.mainPlayerLayout.setOnClickListener{
+            startActivity(Intent(this,SongActivity::class.java))
+        }
+
+        val song = Song(binding.mainMiniPlayerTitleTv.text.toString(),binding.mainMiniPlayerSingerTv.text.toString())
+
+        Log.d("log test",song.title + song.singer)
 
 
+        binding.mainPlayerLayout.setOnClickListener {
+            val intent = Intent(this,SongActivity::class.java)
+            intent.putExtra("title",song.title)
+            intent.putExtra("singer",song.singer)
+            startActivity(intent)
+        }
+
+
+
+        // bottom Navigation 처리
         initNavigation()
-
-
-
 
         binding.mainBnv.setOnItemSelectedListener {
             when (it.itemId) {
@@ -70,6 +90,8 @@ class MainActivity : AppCompatActivity() {
             .commitAllowingStateLoss()
 
     }
+
+
 
 }
 

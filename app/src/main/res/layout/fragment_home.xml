@@ -159,7 +159,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="오늘 발매 음악"
-            app:layout_constraintBottom_toTopOf="@+id/home_today_release_music"
+            app:layout_constraintBottom_toTopOf="@+id/home_today_release_music_hs"
             android:layout_marginStart="20dp"
             android:layout_marginBottom="10dp"
             android:textSize="20sp"
@@ -178,7 +178,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="종합"
-            app:layout_constraintBottom_toTopOf="@+id/home_today_release_music"
+            app:layout_constraintBottom_toTopOf="@+id/home_today_release_music_hs"
             app:layout_constraintEnd_toStartOf="@id/home_today_release_music_genre2_tv"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="20dp"
@@ -189,7 +189,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="국내"
-            app:layout_constraintBottom_toTopOf="@+id/home_today_release_music"
+            app:layout_constraintBottom_toTopOf="@+id/home_today_release_music_hs"
             app:layout_constraintEnd_toStartOf="@id/home_today_release_music_genre3_tv"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="20dp"
@@ -200,7 +200,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="해외"
-            app:layout_constraintBottom_toTopOf="@+id/home_today_release_music"
+            app:layout_constraintBottom_toTopOf="@+id/home_today_release_music_hs"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="20dp"
@@ -209,7 +209,7 @@
         <!-- 오늘 발매 음악 -->
         <HorizontalScrollView
             android:scrollbars="none"
-            android:id="@+id/home_today_release_music"
+            android:id="@+id/home_today_release_music_hs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
@@ -388,19 +388,19 @@
 
         </HorizontalScrollView>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/home_banner1_iv"
-            app:layout_constraintTop_toBottomOf="@+id/home_today_release_music"
-            android:layout_width="match_parent"
-            android:layout_height="130dp">
-            <ImageView
-                android:src="@drawable/img_home_viewpager_exp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:orientation="horizontal"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            android:id="@+id/home_banner1_iv"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/home_today_release_music"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="130dp">-->
+<!--            <ImageView-->
+<!--                android:src="@drawable/img_home_viewpager_exp"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"/>-->
+<!--        </LinearLayout>-->
 
 <!--        <ImageView-->
 <!--            app:layout_constraintStart_toStartOf="parent"-->
@@ -408,11 +408,23 @@
 <!--            android:id="@+id/home_banner1_iv"-->
 <!--            app:layout_constraintTop_toBottomOf="@+id/home_today_release_music"-->
 <!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_height="100dp"-->
 <!--            android:src="@drawable/img_home_viewpager_exp"/>-->
+        <androidx.viewpager2.widget.ViewPager2
+            android:layout_marginTop="15dp"
+            android:id="@+id/home_banner_vp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/home_today_release_music_hs">
+
+
+        </androidx.viewpager2.widget.ViewPager2>
         <TextView
+            android:layout_marginTop="15dp"
             android:id="@+id/home_podcast_tv"
-            app:layout_constraintTop_toBottomOf="@+id/home_banner1_iv"
+            app:layout_constraintTop_toBottomOf="@+id/home_banner_vp"
             app:layout_constraintStart_toStartOf="parent"
             android:textSize="20sp"
             android:textColor="#000"
