@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/more"
+        android:icon="@drawable/ic_my_like_off"
+        app:showAsAction="always"
+        android:title="좋아요"/>
+    <item
+        android:id="@+id/like"
+        android:icon="@drawable/btn_player_more"
+        app:showAsAction="always"
+        android:title="추가 기능"/>
+
+
+
+</menu>

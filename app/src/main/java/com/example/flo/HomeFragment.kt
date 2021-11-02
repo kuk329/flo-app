@@ -25,10 +25,22 @@ class HomeFragment : Fragment() {
                 .commitAllowingStateLoss()
         }
 
+
+        // viewPagerAdapter1
+        val backgroundAdapter = HomeBackgroundViewPagerAdapter(this)
+
+        binding.homeBackgroundVp.adapter = backgroundAdapter
+
+        binding.homeIndicator.setViewPager(binding.homeBackgroundVp)
+
+
+
+
+        // viewPagerAdapter2
         val bannerAdapter = BannerViewPagerAdapter(this)
         // 이미지 여러개 추가
-        bannerAdapter.addFragment(BannerFragment(R.drawable.img_home_viewpager_exp))
-        bannerAdapter.addFragment(BannerFragment(R.drawable.img_home_viewpager_exp2))
+        bannerAdapter.addFragment(BannerFragment(R.drawable.banner1))
+        bannerAdapter.addFragment(BannerFragment(R.drawable.banner2))
         bannerAdapter.addFragment(BannerFragment(R.drawable.img_home_viewpager_exp))
         bannerAdapter.addFragment(BannerFragment(R.drawable.img_home_viewpager_exp2))
 
