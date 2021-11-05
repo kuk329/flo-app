@@ -9,28 +9,21 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.flo.databinding.ActivityMainBinding
+import com.google.gson.Gson
 
 
 class MainActivity : AppCompatActivity() {
 
+    // 전역 변수
     lateinit var binding : ActivityMainBinding
+    // Song
+    private var song : Song = Song()
+    //Gson
+    private var gson : Gson = Gson()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        window.apply {
-            clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                statusBarColor = Color.TRANSPARENT
-                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            }
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-        }
-
-
 
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -40,18 +33,21 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this,SongActivity::class.java))
         }
 
-        val song = Song("라일락","아이유(IU)",215,false)
+        val song = Song("라일락","아이유(IU)",0,215,false,"music_if_i")
 
         Log.d("log test",song.title + song.singer)
 
 
-        binding.mainPlayerLayout.setOnClickListener {
+        binding.mainPlayerLayout.setOnClickListener { //  메인 화면에 미니 플레이어를 눌렀을때 SongActivity로 곡에대한 정보를 넘겨주고 넘어감.
             val intent = Intent(this,SongActivity::class.java)
-            intent.putExtra("title",song.title)
-            intent.putExtra("singer",song.singer)
-            intent.putExtra("playTime",song.playTime)
-            intent.putExtra("isPlaying",song.isPlaying)
+            intent.putExtra("title",song.title) // 노래 제목
+            intent.putExtra("singer",song.singer) // 노래
+            intent.putExtra("second",song.second) // 몇초까지 재생되었는지
+            intent.putExtra("playTime",song.playTime) // 총 노래 시간
+            intent.putExtra("isPlaying",song.isPlaying) // 노래가 재생되고 있었는지의 여부-> 전역 변수로 빼서 재생 중인지 아닌지 판단
+            intent.putExtra("music",song.music) // 음악 파일
             startActivity(intent)
+            // 어짜피 모두 전역변수로 빼서 클리한 곡의 정보를 넘기도록 바꿔야됨.
         }
 
 
@@ -93,24 +89,55 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
-//        val window =window
-//        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
-//        window.setFlags(
-//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-//        )
 
     }
 
     private fun initNavigation() {
         supportFragmentManager.beginTransaction().replace(R.id.main_frm, HomeFragment())
             .commitAllowingStateLoss()
+    }
+
+    private fun setMiniPlayer(song:Song){
+        binding.mainMiniPlayerTitleTv.text = song.title
+        binding.mainMiniPlayerSingerTv.text = song.singer
+        binding.mainPlayerSb.progress = (song.second*1000/song.playTime)
+
+
+
+        if(song.isPlaying){
+            binding.mainMiniplayerPauseIv.visibility = View.VISIBLE
+            binding.mainMiniplayerPlayIv.visibility = View.GONE
+        }else{
+            binding.mainMiniplayerPauseIv.visibility = View.GONE
+            binding.mainMiniplayerPlayIv.visibility = View.VISIBLE
+        }
+
+    }
+
+    override fun onStart() { // shardPreference 값 설정
+        super.onStart()
+
+        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
+        val jsonSong = sharedPreferences.getString("song",null)
+
+        song = if(jsonSong == null){ // 즉 처음 킨 상태는 저장된 값이 없으므로 그것도 예외처리
+            // 여기서는 라일락 노래 에대한 정보를 기본 값으로 초기화
+            Song("라일락","아이유(IU)",0,215,false,"music_if_i")
+
+        }else{ // sharedPreference 에 저장된 값을 Song 데이터 클래스 형태로 변환 후
+
+            gson.fromJson(jsonSong,Song::class.java) // Json 형태의 값을 Song 데이터 클래스로 매치
+        }
+        // 가져온 정보들을 화면에 나타내기 위한 함수
+        setMiniPlayer(song)
+
+    }// end of onStart()
+
+    override fun onPause() { // 음악에대한 정보 저장등의 내용
+        super.onPause()
 
     }
 
 
-
-}
+}// end of Class
 

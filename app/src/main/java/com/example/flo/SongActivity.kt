@@ -1,47 +1,57 @@
 package com.example.flo
 
+import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.flo.databinding.ActivitySongBinding
+import com.google.gson.Gson
 
 class SongActivity : AppCompatActivity() {
 
+    // 전역 변수 선언
     lateinit var binding: ActivitySongBinding
     var play :Boolean = false // 노래가 재생 되고있는지 아닌지를 확인 (프로그래스바 와 재생버튼 관련)
-    val context = this
+    private val context = this
 
     private val song:Song = Song()
-    private lateinit var player: Player
- //   private val handler = Handler(Looper.getMainLooper())
+    private lateinit var timer: Timer
+
+    private var mediaPlayer : MediaPlayer?=null // 노래 재생을 위한 MediaPlayer 변수 선언
+
+    // Gson
+    private var gson : Gson = Gson()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySongBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initSong()
+        initSong() // MainActivity 에서 가져온 값을 song 데이터 클래스 객체에 저장
 
-        player = Player(song.playTime,song.isPlaying)
-        player.start()
+        timer = Timer(song.playTime,song.isPlaying) // timer 에대한 매개변수로 위에서 데이터가 채워진 song 객체 넘김
+        timer.start()
 
 
         binding.songDownIb.setOnClickListener {
             finish() // 액티비티 종료
         }
 
-        binding.songPlayIv.setOnClickListener {
-            player.isPlaying = true
+        binding.songPlayIv.setOnClickListener { // 재생버튼 눌렀을때
             setPlayerStatus(true)
+            timer.isPlaying = true
+            song.isPlaying = true
+            mediaPlayer?.start() // 미디어 플레이어 실행
         }
 
-        binding.songPauseIv.setOnClickListener {
-            player.isPlaying = false
+        binding.songPauseIv.setOnClickListener { // 정지버튼 눌렀을때
             setPlayerStatus(false)
+            timer.isPlaying = false
+            song.isPlaying=false
+            mediaPlayer?.pause() // 미디어 플레이어 정지
         }
 
         // 좋아요 버튼
@@ -107,33 +117,40 @@ class SongActivity : AppCompatActivity() {
     }// end of onCreate
 
     private fun initSong(){ // 노래에 대한 정보 받아와서 나타내는 함수
-        if(intent.hasExtra("title")&& intent.hasExtra("singer")&&intent.hasExtra("playTime")){
-            song.title = intent.getStringExtra("title")!!
-            song.singer = intent.getStringExtra("singer")!!
-            song.playTime = intent.getIntExtra("playTime",0)!!
-            song.isPlaying = intent.getBooleanExtra("isPlaying",false)!!
+        if(intent.hasExtra("title")&& intent.hasExtra("singer")&& intent.hasExtra("second") &&intent.hasExtra("playTime")
+            &&intent.hasExtra("isPlaying") &&intent.hasExtra("music")){
+            song.title = intent.getStringExtra("title")!! // 제목
+            song.singer = intent.getStringExtra("singer")!! // 가수 이름
+            song.second = intent.getIntExtra("second",0) // 몇초까지 재생되었는지
+            song.playTime = intent.getIntExtra("playTime",0)!! // 총 재생 시간
+            song.isPlaying = intent.getBooleanExtra("isPlaying",false)!! // 재생 여부
+            song.music = intent.getStringExtra("music")!! // 음악 파일(노래 일므)
+
+            // 노래 이름만으로는 노래를 가져올수 없으므로 resources.getIdentifier(노래 이름,"raw",this.packageName)
+            val music = resources.getIdentifier(song.music,"raw",this.packageName)
 
             binding.songTimeEndTv.text = String.format("%02d:%02d",song.playTime/60,song.playTime%60)
             binding.songTitleTv.text = song.title
             binding.songSingerTv.text = song.singer
             setPlayerStatus(song.isPlaying)
+            mediaPlayer = MediaPlayer.create(this,music) // 미디어 플레이어에게 노래 파일 정보 넘겨주기.
         }
 
 
     }
 
-    fun setPlayerStatus(isPlaying: Boolean){
+    fun setPlayerStatus(isPlaying: Boolean){ // 현재 재생 여부 (isPlaying 값) 에 따라 정지와 실행 이미지가 바뀌도록 하는 함수.
         if(isPlaying){ // true
-            binding.songPlayIv.visibility = View.GONE
-            binding.songPauseIv.visibility = View.VISIBLE
+            binding.songPlayIv.visibility = View.GONE // 재생 이미지 사라짐
+            binding.songPauseIv.visibility = View.VISIBLE // 정지 이미지 보임
         }else{ // false 노래 멈춤
-            binding.songPlayIv.visibility = View.VISIBLE
-            binding.songPauseIv.visibility = View.GONE
+            binding.songPlayIv.visibility = View.VISIBLE // 재생 이미지 보임
+            binding.songPauseIv.visibility = View.GONE // 정지 이미지 사라짐
         }
 
     }
 
-    inner class Player(private val playTime:Int,var isPlaying: Boolean) : Thread(){
+    inner class Timer(private val playTime:Int, var isPlaying: Boolean) : Thread(){
         private var second = 0 //  처음 시간
 
         override fun run() {
@@ -142,9 +159,8 @@ class SongActivity : AppCompatActivity() {
                     if(second >= playTime){
                         break
                     }
-
                     if(isPlaying){ // true 일때만 실행
-                        sleep(1000)
+                        sleep(1000) // 진행중인 변수를 1초마다 증가하도록 (즉 1초마다 변하도록)
                         second++
                         runOnUiThread{
                             binding.songPlayerSb.progress = second*1000/playTime
@@ -159,12 +175,45 @@ class SongActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        player.interrupt()
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
+        mediaPlayer?.pause() // 미디어 플레이어 중지
+        timer.isPlaying = false// 스레드 중지
+        song.isPlaying = false // 노래 실행 여부도 정지로 바꿈
+        song.second = (binding.songPlayerSb.progress*song.playTime)/1000 // progress 구한식에서 반대로
+        setPlayerStatus(false) // 정지가 되었으므로 재생 이미지로 변환
+
+
+        // sharedPreferences
+        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
+        val editor = sharedPreferences.edit() // sharedPreferences 조작할때 사용을 한다.
+
+//        editor.putString("title",song.title)
+//        editor.putString("singer",song.singer)
+//        editor.putBoolean("isPlaying",song.isPlaying)
+
+
+
+        // Gson
+        val json = gson.toJson(song) // Gson을 사용해 song data 객체를 Json으로 변환
+        editor.putString("song",json)
+
+        editor.apply()
+
+
     }
 
+    override fun onDestroy() { // 대부분의 리소스 해제 작업
+        super.onDestroy()
+        timer.interrupt() // 스레드 해제
+        mediaPlayer?.release() // 미디어 플레이어가 갖고있던 리소스를 해제
+        mediaPlayer = null // 미디어 플레이어 해제
 
+    }
 
+    override fun onStart() { // songActivity 화면을 나갔다가 다시 들어와도 기존 재생된던 값이 남아있도록
+        super.onStart()
+        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
 
+    }
 }// end of Class
