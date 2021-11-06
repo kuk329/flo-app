@@ -4,6 +4,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.flo.databinding.ActivitySongBinding
 import com.google.gson.Gson
@@ -12,11 +13,11 @@ class SongActivity : AppCompatActivity() {
 
     // 전역 변수 선언
     lateinit var binding: ActivitySongBinding
-    var play :Boolean = false // 노래가 재생 되고있는지 아닌지를 확인 (프로그래스바 와 재생버튼 관련)
+  //  var play :Boolean = false // 노래가 재생 되고있는지 아닌지를 확인 (프로그래스바 와 재생버튼 관련)
     private val context = this
 
-    private val song:Song = Song()
-    private lateinit var timer: Timer
+    private var song:Song = Song()
+    private lateinit var timer: Timer // 스레드 클래스 선언
 
     private var mediaPlayer : MediaPlayer?=null // 노래 재생을 위한 MediaPlayer 변수 선언
 
@@ -29,11 +30,13 @@ class SongActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySongBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    //    Toast.makeText(this,"SongActivity onCreate()",Toast.LENGTH_SHORT).show()
+        Log.d("log","SongActivity onCreate()")
 
         initSong() // MainActivity 에서 가져온 값을 song 데이터 클래스 객체에 저장
 
-        timer = Timer(song.playTime,song.isPlaying) // timer 에대한 매개변수로 위에서 데이터가 채워진 song 객체 넘김
-        timer.start()
+//        timer = Timer(song.playTime,song.isPlaying) // timer 에대한 매개변수로 위에서 데이터가 채워진 song 객체 넘김
+//        timer.start() // 스레드 시작!
 
 
         binding.songDownIb.setOnClickListener {
@@ -116,6 +119,103 @@ class SongActivity : AppCompatActivity() {
 
     }// end of onCreate
 
+    override fun onStart() { // songActivity 화면을 나갔다가 다시 들어와도 기존 재생된던 값이 남아있도록
+        super.onStart()
+    //    Toast.makeText(this,"SongActivity onStart()",Toast.LENGTH_SHORT).show()
+        Log.d("log","SongActivity onStart()")
+
+
+        // 기존에 틀고있던 노래가 있으면 그 정보를 가져오기 위한것.
+        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
+        val jsonSong = sharedPreferences.getString("song",null)
+
+        if(jsonSong!=null){
+            song = gson.fromJson(jsonSong,Song::class.java)
+            timer = Timer(song.playTime,song.isPlaying,song.second)
+            timer.start()
+        }else{
+            timer = Timer(song.playTime,song.isPlaying,song.second) 
+           timer.start() // 스레드 시작!
+        }
+
+
+
+//        if(songSecond==0){ // 기존에 노래가 재생된 시간값이 없으면
+//            timer = Timer(song.playTime,song.isPlaying,0) // timer 에대한 매개변수로 위에서 데이터가 채워진 song 객체 넘김
+//            timer.start() // 스레드 시작!
+//
+//        }else{
+//            timer = Timer(song.playTime,song.isPlaying,songSecond)
+//            timer.start()
+//        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+      //  Toast.makeText(this,"SongActivity onResume()",Toast.LENGTH_SHORT).show()
+        Log.d("log","SongActivity onResume()")
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+    //    Toast.makeText(this,"SongActivity onPause()",Toast.LENGTH_SHORT).show()
+        Log.d("log","SongActivity onPause()")
+
+        mediaPlayer?.pause() // 미디어 플레이어 중지
+        timer.isPlaying = false// 스레드 중지
+        song.isPlaying = false // 노래 실행 여부도 정지로 바꿈
+        song.second = (binding.songPlayerSb.progress*song.playTime)/1000 // progress 구한식에서 반대로
+        setPlayerStatus(false) // 정지가 되었으므로 재생 이미지로 변환
+
+
+        // sharedPreferences
+        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
+        val editor = sharedPreferences.edit() // sharedPreferences 조작할때 사용을 한다.
+
+        // 노가다 코드
+//        editor.putString("title",song.title)
+//        editor.putString("singer",song.singer)
+//        editor.putBoolean("isPlaying",song.isPlaying)
+
+
+
+        // Gson
+        val json = gson.toJson(song) // Gson을 사용해 song data 객체를 Json으로 변환
+        editor.putString("song",json)
+
+        editor.apply()
+
+    }// end of onPause()
+
+
+    override fun onStop() {
+        super.onStop()
+     //   Toast.makeText(this,"SongActivity onStop()",Toast.LENGTH_SHORT).show()
+        Log.d("log","SongActivity onStop()")
+
+    }// end of onStop()
+
+
+    override fun onDestroy() { // 대부분의 리소스 해제 작업
+   //     Toast.makeText(this,"SongActivity onDestroy()",Toast.LENGTH_SHORT).show()
+        Log.d("log","SongActivity onDestroy()")
+        super.onDestroy()
+        timer.interrupt() // 스레드 해제
+        mediaPlayer?.release() // 미디어 플레이어가 갖고있던 리소스를 해제
+        mediaPlayer = null // 미디어 플레이어 해제
+
+    }// end of onDestroy()
+
+
+
+
+    // ------------------------------- 함수 -----------------------------------------
+
+
+
+
     private fun initSong(){ // 노래에 대한 정보 받아와서 나타내는 함수
         if(intent.hasExtra("title")&& intent.hasExtra("singer")&& intent.hasExtra("second") &&intent.hasExtra("playTime")
             &&intent.hasExtra("isPlaying") &&intent.hasExtra("music")){
@@ -150,8 +250,8 @@ class SongActivity : AppCompatActivity() {
 
     }
 
-    inner class Timer(private val playTime:Int, var isPlaying: Boolean) : Thread(){
-        private var second = 0 //  처음 시간
+    inner class Timer(private val playTime:Int, var isPlaying: Boolean,var second:Int) : Thread(){
+       // private var second = 0 //  처음 시간
 
         override fun run() {
             try {
@@ -162,12 +262,12 @@ class SongActivity : AppCompatActivity() {
                     if(isPlaying){ // true 일때만 실행
                         sleep(1000) // 진행중인 변수를 1초마다 증가하도록 (즉 1초마다 변하도록)
                         second++
-                        runOnUiThread{
+                        runOnUiThread{ // ui를 건드릴수 있게 하기 위해
                             binding.songPlayerSb.progress = second*1000/playTime
                             binding.songTimeStartTv.text  = String.format("%02d:%02d",second/60,second%60)
                         }
                     }
-                }
+                } // end of while
             }catch (e:InterruptedException){
                 Log.d("interrupt","스레드가 종료되었습니다.")
 
@@ -175,45 +275,6 @@ class SongActivity : AppCompatActivity() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        mediaPlayer?.pause() // 미디어 플레이어 중지
-        timer.isPlaying = false// 스레드 중지
-        song.isPlaying = false // 노래 실행 여부도 정지로 바꿈
-        song.second = (binding.songPlayerSb.progress*song.playTime)/1000 // progress 구한식에서 반대로
-        setPlayerStatus(false) // 정지가 되었으므로 재생 이미지로 변환
 
 
-        // sharedPreferences
-        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
-        val editor = sharedPreferences.edit() // sharedPreferences 조작할때 사용을 한다.
-
-//        editor.putString("title",song.title)
-//        editor.putString("singer",song.singer)
-//        editor.putBoolean("isPlaying",song.isPlaying)
-
-
-
-        // Gson
-        val json = gson.toJson(song) // Gson을 사용해 song data 객체를 Json으로 변환
-        editor.putString("song",json)
-
-        editor.apply()
-
-
-    }
-
-    override fun onDestroy() { // 대부분의 리소스 해제 작업
-        super.onDestroy()
-        timer.interrupt() // 스레드 해제
-        mediaPlayer?.release() // 미디어 플레이어가 갖고있던 리소스를 해제
-        mediaPlayer = null // 미디어 플레이어 해제
-
-    }
-
-    override fun onStart() { // songActivity 화면을 나갔다가 다시 들어와도 기존 재생된던 값이 남아있도록
-        super.onStart()
-        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
-
-    }
 }// end of Class

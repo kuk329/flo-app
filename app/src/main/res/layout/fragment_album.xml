@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/album_like_iv"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginEnd="15dp"   
         android:src="@drawable/ic_my_like_off"
         app:layout_constraintBottom_toBottomOf="@+id/album_more_iv"
@@ -18,7 +18,7 @@
         android:id="@+id/album_more_iv"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="45dp"
         android:layout_marginEnd="15dp"
         android:background="@color/white"
         android:scaleType="fitXY"

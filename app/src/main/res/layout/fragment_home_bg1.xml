@@ -5,17 +5,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <ImageView
         android:id="@+id/home_background_iv"
         android:layout_width="match_parent"
-        android:layout_height="370dp"
-        android:src="@drawable/home_background4"
+        android:layout_height="410dp"
         android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/home_background4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent "/>
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent " />
+
     <ImageView
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="45dp"
         android:layout_marginEnd="20dp"
         android:id="@+id/home_btn_setting_iv"
         android:layout_width="40dp"
@@ -25,7 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent "/>
     <ImageView
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="45dp"
         android:layout_marginEnd="20dp"
         android:id="@+id/home_btn_ticket_iv"
         android:layout_width="40dp"
@@ -37,7 +40,7 @@
         app:layout_constraintTop_toTopOf="parent "/>
 
     <ImageView
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="45dp"
         android:layout_marginEnd="20dp"
         android:id="@+id/home_btn_nugu_iv"
         android:layout_width="40dp"
