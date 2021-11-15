@@ -15,13 +15,20 @@ class LockerFragment : Fragment() {
     private val information = arrayListOf("저장한 곡","음악파일")
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLockerBinding.inflate(inflater, container, false)
+
+
+
+
+
+
+
+
 
 
         val adapter =  LockerViewPageAdapter(this)

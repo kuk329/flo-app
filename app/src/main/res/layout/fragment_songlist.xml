@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <androidx.core.widget.NestedScrollView
@@ -110,12 +110,12 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:src="@drawable/icon_browse_arrow_right"
-                app:layout_constraintBottom_toBottomOf="@id/song_all_listen_tv"
-                app:layout_constraintEnd_toStartOf="@+id/song_all_listen_tv"
-                app:layout_constraintTop_toTopOf="@+id/song_all_listen_tv" />
+                app:layout_constraintBottom_toBottomOf="@id/save_song_all_listen_tv"
+                app:layout_constraintEnd_toStartOf="@+id/save_song_all_listen_tv"
+                app:layout_constraintTop_toTopOf="@+id/save_song_all_listen_tv" />
 
             <TextView
-                android:id="@+id/song_all_listen_tv"
+                android:id="@+id/save_song_all_listen_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -134,8 +134,13 @@
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/song_all_listen_tv">
+                app:layout_constraintTop_toBottomOf="@+id/save_song_all_listen_tv">
 
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/song_list_item_recyclerview"-->
+<!--                    tools:listitem="@layout/item_album_songs"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"/>-->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/song_lalac_layout"
                     android:layout_width="match_parent"

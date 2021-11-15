@@ -59,7 +59,7 @@
         android:id="@+id/song_title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:text="제목"
         android:textColor="#000"
         android:textSize="18sp"
@@ -99,8 +99,8 @@
 
         <ImageView
             android:id="@+id/song_iv"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="290dp"
+            android:layout_height="290dp"
             android:src="@drawable/song1_img" />
     </androidx.cardview.widget.CardView>
 
@@ -111,7 +111,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
         android:maxLines="2"
-        android:text="IF I.. IF I.. 사랑이면 이젠 난 어떡해야 해"
+        android:text="IF I.. IF I.. 사랑이면 이제 난 어떡해야 해"
         app:layout_constraintEnd_toEndOf="@id/song_picture_cv"
         app:layout_constraintStart_toStartOf="@+id/song_picture_cv"
         app:layout_constraintTop_toBottomOf="@+id/song_picture_cv" />

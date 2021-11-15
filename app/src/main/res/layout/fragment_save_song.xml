@@ -1,17 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="저장한 곡이 없습니다."
-        android:textSize="24sp"/>
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+   <ImageView
+       android:id="@+id/save_song_all_select_iv"
+       android:layout_width="15dp"
+       android:layout_height="15dp"
+       android:layout_marginStart="15dp"
+       android:layout_marginTop="15dp"
+       android:src="@drawable/btn_playlist_select_off"
+       app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"/>
+
+   <ImageView
+       android:id="@+id/save_song_select_off_iv"
+       android:layout_width="15dp"
+       android:layout_height="15dp"
+       android:layout_marginStart="15dp"
+       android:layout_marginTop="15dp"
+       android:src="@drawable/btn_playlist_select_on"
+       android:visibility="gone"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent" />
+
+   <TextView
+       android:id="@+id/song_all_select_tv"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="전체선택"
+       android:textColor="@color/black"
+       android:textSize="10sp"
+       app:layout_constraintBottom_toBottomOf="@+id/save_song_all_select_iv"
+       app:layout_constraintStart_toEndOf="@+id/save_song_all_select_iv"
+       app:layout_constraintTop_toTopOf="@+id/save_song_all_select_iv" />
+
+<!--   <TextView-->
+<!--       android:id="@+id/song_all_select_off_tv"-->
+<!--       android:layout_width="wrap_content"-->
+<!--       android:layout_height="wrap_content"-->
+<!--       android:text="선택해제"-->
+<!--       android:textColor="@color/flo_color"-->
+<!--       android:textSize="10sp"-->
+<!--       android:visibility="gone"-->
+<!--       app:layout_constraintBottom_toBottomOf="@+id/save_song_select_off_iv"-->
+<!--       app:layout_constraintStart_toEndOf="@+id/save_song_select_off_iv"-->
+<!--      app:layout_constraintTop_toTopOf="save_song_select_off_iv" />-->
+
+   <ImageView
+       android:id="@+id/save_song_all_listen_iv"
+       android:layout_width="15dp"
+       android:layout_height="15dp"
+       android:layout_marginTop="15dp"
+       android:layout_marginStart="100dp"
+       android:src="@drawable/icon_browse_arrow_right"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent" />
+
+   <TextView
+       android:id="@+id/save_song_all_listen_tv"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginEnd="15dp"
+       android:text="전체듣기"
+       android:textColor="@color/black"
+       android:textSize="10sp"
+       app:layout_constraintTop_toTopOf="@+id/save_song_all_listen_iv"
+       app:layout_constraintBottom_toBottomOf="@+id/save_song_all_listen_iv"
+       app:layout_constraintStart_toEndOf="@+id/save_song_all_listen_iv"/>
+<TextView
+    android:id="@+id/save_song_edit"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+   android:text="편집"
+    android:textSize="10sp"
+    android:textColor="@color/black"
+    android:layout_marginTop="15dp"
+    android:layout_marginEnd="15dp"
+   app:layout_constraintEnd_toEndOf="parent"
+   app:layout_constraintTop_toTopOf="parent"/>
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/save_song_recyclerview"
+       app:layout_constraintTop_toBottomOf="@+id/save_song_edit"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       android:layout_marginTop="15dp"
+       tools:listitem="@layout/item_save_song"
+       android:layout_width="match_parent"
+       android:layout_height="0dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

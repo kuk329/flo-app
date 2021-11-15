@@ -8,9 +8,11 @@
     tools:context=".MainActivity">
     <FrameLayout
         android:id="@+id/main_frm"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/main_player_layout"
+        app:layout_constraintBottom_toTopOf="@id/main_player_sb"
         app:layout_constraintTop_toTopOf="parent" />
 
     <SeekBar
@@ -33,12 +35,14 @@
         android:id="@+id/main_player_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/main_bnv"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:paddingVertical="5dp"
         android:background="#F9F9F9"
+        app:layout_constraintBottom_toTopOf="@+id/main_bnv"
         >
         <LinearLayout
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"

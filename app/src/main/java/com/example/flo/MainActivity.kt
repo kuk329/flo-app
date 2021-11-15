@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        val song = Song("IF I","백지영",0,221,false,"music_if_i")
+        val song = Song("01","IF I","백지영",0,221,false,"music_if_i",false)
 
        // Log.d("log test",song.title + song.singer)
 
@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 
         song = if(jsonSong == null){ // 즉 처음 킨 상태는 저장된 값이 없으므로 그것도 예외처리
             // 여기서는 라일락 노래 에대한 정보를 기본 값으로 초기화
-            Song("IF I","백지영",0,221,false,"music_if_i")
+            Song("01","IF I","백지영",0,221,false,"music_if_i",false)
 
         }else{ // sharedPreference 에 저장된 값을 Song 데이터 클래스 형태로 변환 후
 
@@ -161,7 +161,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
     private fun initNavigation() {
         supportFragmentManager.beginTransaction().replace(R.id.main_frm, HomeFragment())
             .commitAllowingStateLoss()
@@ -182,7 +181,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
 
 
 }// end of Class
