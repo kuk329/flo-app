@@ -3,10 +3,12 @@ package com.example.flo
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.MediaController
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.flo.databinding.ActivityMainBinding
@@ -17,37 +19,38 @@ class MainActivity : AppCompatActivity() {
 
     // 전역 변수
     lateinit var binding : ActivityMainBinding
-    // Song
-    private var song : Song = Song()
-    //Gson
-    private var gson : Gson = Gson()
+    private var song : Song = Song() // Song
+    private var gson : Gson = Gson() //Gson
+
+    // 미디어 플레이어
+    private var mediaPlayer : MediaPlayer?=null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-    //    Toast.makeText(this,"MainActivity onCreate()",Toast.LENGTH_SHORT).show()
-        Log.d("log","MainActivity onCreate()")
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        val song = Song("01","IF I","백지영",0,221,false,"music_if_i",false)
-
-       // Log.d("log test",song.title + song.singer)
+        //    Toast.makeText(this,"MainActivity onCreate()",Toast.LENGTH_SHORT).show()
+        Log.d("log","MainActivity onCreate()")
 
 
-        binding.mainPlayerLayout.setOnClickListener { //  메인 화면에 미니 플레이어를 눌렀을때 SongActivity로 곡에대한 정보를 넘겨주고 넘어감.
-            val intent = Intent(this,SongActivity::class.java)
-            intent.putExtra("title",song.title) // 노래 제목
-            intent.putExtra("singer",song.singer) // 노래
-            intent.putExtra("second",song.second) // 몇초까지 재생되었는지
-            intent.putExtra("playTime",song.playTime) // 총 노래 시간
-            intent.putExtra("isPlaying",song.isPlaying) // 노래가 재생되고 있었는지의 여부-> 전역 변수로 빼서 재생 중인지 아닌지 판단
-            intent.putExtra("music",song.music) // 음악 파일
+        initNavigation() // bottom Navigation 처리
+        inputDummyAlbums()  // RoomDB에 데이터들 저장
+        inputDummySongs() // RoomDB에 데이터들 저장
+
+
+
+        binding.mainPlayerLayout.setOnClickListener { //  메인 화면에 미니 플레이어를 눌렀을때 현재 곡에대한 id sharedPreference로 저장.
+            Log.d("nowSongID",song.id.toString())
+            val editor = getSharedPreferences("song", MODE_PRIVATE).edit()
+            editor.putInt("songId",song.id)
+            editor.apply()
+
+            val intent = Intent(this@MainActivity,SongActivity::class.java)
             startActivity(intent)
-            // 어짜피 모두 전역변수로 빼서 클리한 곡의 정보를 넘기도록 바꿔야됨.
+
         }
 
         binding.mainMiniplayerPlayIv.setOnClickListener {
@@ -61,63 +64,28 @@ class MainActivity : AppCompatActivity() {
             song.isPlaying = true
         }
 
-        // bottom Navigation 처리
-        initNavigation()
 
-        binding.mainBnv.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.homeFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, HomeFragment())
-                        .commitAllowingStateLoss()
-                    return@setOnItemSelectedListener true
-                }
-
-                R.id.lookFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, LookFragment())
-                        .commitAllowingStateLoss()
-                    return@setOnItemSelectedListener true
-                }
-
-                R.id.searchFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, SearchFragment())
-                        .commitAllowingStateLoss()
-                    return@setOnItemSelectedListener true
-                }
-
-                R.id.lockerFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, LockerFragment())
-                        .commitAllowingStateLoss()
-                    return@setOnItemSelectedListener true
-                }
-            }
-            false
-        }
 
     }// end of onCreate()
 
 
-    override fun onStart() { // shardPreference 값 설정
+    override fun onStart() { // shardPreference 값 가져옴.
         super.onStart()
 
      //   Toast.makeText(this,"MainActivity onStart()",Toast.LENGTH_SHORT).show()
         Log.d("log","MainActivity onStart()")
+
         val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
-        val jsonSong = sharedPreferences.getString("song",null)
+        val songId = sharedPreferences.getInt("songId",0) // 진행중이던 곡의 아이디 가져옴. song db의 pk는 id로
 
-        song = if(jsonSong == null){ // 즉 처음 킨 상태는 저장된 값이 없으므로 그것도 예외처리
-            // 여기서는 라일락 노래 에대한 정보를 기본 값으로 초기화
-            Song("01","IF I","백지영",0,221,false,"music_if_i",false)
-
-        }else{ // sharedPreference 에 저장된 값을 Song 데이터 클래스 형태로 변환 후
-
-            gson.fromJson(jsonSong,Song::class.java) // Json 형태의 값을 Song 데이터 클래스로 매치
+        val songDB = SongDatabase.getInstance(this)!!
+        song = if(songId==0){ // 실행중인 노래가 없었다면 테이블 첫번째 노래를 넣어줌
+            songDB.songDao().getSong(1)
+        }else{
+            songDB.songDao().getSong(songId)
         }
-        // 가져온 정보들을 화면에 나타내기 위한 함수
-        setMiniPlayer(song)
+        Log.d("song ID",song.id.toString())
+        setMiniPlayer(song) //미니플레이어 데이터 렌더링
 
     }// end of onStart()
 
@@ -164,12 +132,49 @@ class MainActivity : AppCompatActivity() {
     private fun initNavigation() {
         supportFragmentManager.beginTransaction().replace(R.id.main_frm, HomeFragment())
             .commitAllowingStateLoss()
+
+        binding.mainBnv.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.homeFragment -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_frm, HomeFragment())
+                        .commitAllowingStateLoss()
+                    return@setOnItemSelectedListener true
+                }
+
+                R.id.lookFragment -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_frm, LookFragment())
+                        .commitAllowingStateLoss()
+                    return@setOnItemSelectedListener true
+                }
+
+                R.id.searchFragment -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_frm, SearchFragment())
+                        .commitAllowingStateLoss()
+                    return@setOnItemSelectedListener true
+                }
+
+                R.id.lockerFragment -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_frm, LockerFragment())
+                        .commitAllowingStateLoss()
+                    return@setOnItemSelectedListener true
+                }
+            }
+            false
+        }
+
+
     }
 
-    private fun setMiniPlayer(song:Song){ // 미니플레이어 화면 처리
+    private fun setMiniPlayer(song:Song){ // 미니플레이어 데이터 렌더링 함수
         binding.mainMiniPlayerTitleTv.text = song.title
         binding.mainMiniPlayerSingerTv.text = song.singer
         binding.mainPlayerSb.progress = (song.second*1000/song.playTime)
+
+        val music = resources.getIdentifier(song.music,"raw",this.packageName)
 
 
         if(song.isPlaying){
@@ -179,8 +184,82 @@ class MainActivity : AppCompatActivity() {
             binding.mainMiniplayerPauseIv.visibility = View.GONE
             binding.mainMiniplayerPlayIv.visibility = View.VISIBLE
         }
+    }
+
+    // ROOM DB
+    private fun inputDummyAlbums(){
+        val songDB = SongDatabase.getInstance(this)!!
+        val albums = songDB.albumDao().getAlbums()
+
+        if(albums.isNotEmpty()) return // db가 비어있지 않으면 더미데이터를 채울 필요 없음
+
+        songDB.albumDao().insert(
+            Album(
+                1,
+                "IU 5th Album 'LILAC'", "아이유 (IU)", R.drawable.album_img1,"2021.03.25","정규 | 댄스 팝"
+
+            )
+        )
+        songDB.albumDao().insert(
+            Album(
+                2,
+                "My Universe", "Coldplay & 방탄소년단", R.drawable.album_img2,"2021.09.24","싱글 | 팝,얼터너티브 팝"
+            )
+        )
+
+        songDB.albumDao().insert(
+            Album(
+                3,
+                "연모 OST Part.3", "백지영", R.drawable.album_img3,"2021.10.26","OST | TV 드라마"
+            )
+        )
+
+        songDB.albumDao().insert(
+            Album(
+                4,
+                "서로의 서로", "적재", R.drawable.album_img4,"2021.11.16","싱글 | 록"
+            )
+        )
+
+        songDB.albumDao().insert(
+            Album(
+                5,
+                "MSG워너비 1집", "MSG워너비", R.drawable.album_img5,"2021.06.26","싱글 | 발라드"
+            )
+        )
+
+        songDB.albumDao().insert(
+            Album(
+                6,
+                "나의 첫사랑", "다비치", R.drawable.album_img6,"2021.10.18","싱글 | 발라드"
+            )
+        )
 
     }
+
+    private fun inputDummySongs(){
+        val songDB = SongDatabase.getInstance(this)!!
+        val songs = songDB.songDao().getSongs()  // 테이블의 모든 데이터 가져오기
+
+        if(songs.isNotEmpty()) return // 테이블에 값이 아무것도 없으면 함수 종료
+
+        // 더미 데이터
+        songDB.songDao().insert(Song("IF I","백지영",0,221,false,"music_if_i",R.drawable.song1_img))
+        songDB.songDao().insert(Song("라일락","아이유(IU)",0,214,false,"music_lilac",R.drawable.album_img1))
+        songDB.songDao().insert(Song("strawberry moon","아이유(IU)",0,205,false,"music_strawberry_moon",R.drawable.song2_img))
+        songDB.songDao().insert(Song("Yours","진",0,264,false,"music_yours",R.drawable.song6_img))
+        songDB.songDao().insert(Song("Butter","방탄소년단",0,167,false,"music_butter",R.drawable.song4_img))
+        songDB.songDao().insert(Song("Permission to Dance","방탄소년단",0,188,false,"permission_to_dance",R.drawable.song5_img))
+        songDB.songDao().insert(Song("나 그댈위해 시 한편을 쓰겠어","케이시",0,219,false,"music_strawberry_moon",R.drawable.song7_img))
+        songDB.songDao().insert(Song("너는 내 세상이었어","볼빨간사춘기",0,274,false,"you_are_my_world",R.drawable.song8_img))
+        songDB.songDao().insert(Song("나의 첫사랑","다비치",0,236,false,"music_strawberry_moon",R.drawable.song9_img))
+        songDB.songDao().insert(Song("My Universe","Coldplay & 방탄소년단",0,228,false,"music_myuniverse",R.drawable.song11_img))
+
+        val _songs= songDB.songDao().getSongs() // 들어간 더미 데이터 값 확인
+        Log.d("roomDB",_songs.toString())
+    }
+
+
 
 
 }// end of Class

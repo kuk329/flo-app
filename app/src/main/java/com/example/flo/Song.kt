@@ -1,13 +1,20 @@
 package com.example.flo
 
-data class Song(
-    var order : String="", // (앨범 안에) 곡 순서
-    var title : String = "", // 노래 제목
-    var singer : String = "", // 가수 이름
-    var second : Int= 0, // 몇초까지 재생되었는지
-    var playTime : Int = 0, // 총 재생시간
-    var isPlaying : Boolean = false,
-    var music: String = "", // 음악 파일
-    var titleSong : Boolean = false // 타이틀 곡인지 확인
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-)
+@Entity(tableName = "SongTable")
+data class Song(
+   // var order : Int?= null, // (앨범 안에) 곡 순서
+    var title: String = "",
+    var singer: String = "",
+    var second: Int = 0,
+    var playTime: Int = 0,
+    var isPlaying: Boolean = false,
+    var music: String = "",
+    var coverImg: Int? = null,
+    var isLike: Boolean = false,
+    var albumIdx: Int = 0 // 이 song이 어떤 앨범에 담겨 있는지 가리키는 변수 (foreign key 역할)
+){
+    @PrimaryKey(autoGenerate = true) var id:Int = 0
+}

@@ -26,14 +26,14 @@ class SongListItemRvAdapter(private val songList:ArrayList<Song>):RecyclerView.A
     inner class ViewHolder(val binding:ItemAlbumSongsBinding):RecyclerView.ViewHolder(binding.root){
 
         fun bind(song:Song){
-            binding.itemAlbumSongsOrder.text = song.order
+        //    binding.itemAlbumSongsOrder.text = song.order
             binding.itemAlbumSongsTitle.text = song.title
             binding.itemAlbumSongsSinger.text = song.singer
-            val titleCheck:Boolean = song.titleSong
-            if(!titleCheck){
-                binding.itemAlbumSongsTitleCheck.visibility = View.GONE
-                //binding.itemAlbumSongsTitle.marginStart.
-            }
+          //  val titleCheck:Boolean = song.titleSong
+//            if(!titleCheck){
+//                binding.itemAlbumSongsTitleCheck.visibility = View.GONE
+//                //binding.itemAlbumSongsTitle.marginStart.
+//            }
 
         }
     }

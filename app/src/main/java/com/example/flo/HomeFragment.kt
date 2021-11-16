@@ -1,7 +1,6 @@
 package com.example.flo
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,9 +15,9 @@ import com.google.gson.JsonArray
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
-    private var albumDatas = ArrayList<Album>() // 여러 앨범정보들을 담고있는 arrayList 선언
-    private var songDatas = ArrayList<Song>()
-    private var gson : Gson = Gson()
+    private var albums = ArrayList<Album>()
+
+    private lateinit var songDB : SongDatabase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,47 +26,31 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-//        binding.homeTodayReleaseMusic1Cv.setOnClickListener {
-//            (context as MainActivity).supportFragmentManager.beginTransaction()
-//                .replace(R.id.main_frm , AlbumFragment())
-//                .commitAllowingStateLoss()
-//        }
+        // ROOM DB
+        songDB = SongDatabase.getInstance(requireContext())!!
+        albums.addAll(songDB.albumDao().getAlbums()) // songDB에서 ALBUM list를 가져온다.
 
-        songDatas.apply {
-            add(Song("01","IF I","백지영",0,221,false,"music_if_i",true))
-            add(Song("02","dsf","백지영",0,221,false,"music_if_i",false))
-            add(Song("03","dfd","백지영",0,221,false,"music_if_i",true))
-        }
-        // 데이터 리스트 생성 (더미 데이터) -> 리사이클러 뷰로 나타낼 데이터들을 수동으로 넣어서 어댑터 클래스에 넘김
-        albumDatas.apply {
-            add(Album("연모 OST Part.3","백지영",R.drawable.song1_img,songDatas))
-            add(Album("strawberry moon","아이유(IU)",R.drawable.song2_img,songDatas))
-            add(Album("CRAZY IN LOVE","ITZY (있지)",R.drawable.today_release_music1,songDatas))
-            add(Album("9월 24일","임한별",R.drawable.today_release_music2,songDatas))
-            add(Album("My Universe","Coldplay &amp; 방탄소년단",R.drawable.today_release_music3,songDatas))
-            add(Album("바라만 본다","MSG워너비(M.O.M)",R.drawable.song3_img,songDatas))
-        }
-
-
-        // 어댑터 설정정
-        // 더미 데이터와 Adapter 연결
-        val albumRvAdapter = AlbumRvAdapter(albumDatas)
-        // 리사이클러뷰에 어댑터 연결
-        binding.homeTodayMusicAlbumRv.adapter = albumRvAdapter
-
-
-        albumRvAdapter.setMyItemClickListener(object:AlbumRvAdapter.MyItemClickListener{
-            override fun onItemClick(album:Album) {
-                changeAlbumFragment(album)
-            }
-        })
 
         // 레이아웃 메니저 설정
         binding.homeTodayMusicAlbumRv.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
 
 
+        // 더미 데이터와 Adapter 연결
+        val albumRvAdapter = AlbumRvAdapter(albums)
 
-       // viewPagerAdapter1
+
+        albumRvAdapter.setMyItemClickListener(object:AlbumRvAdapter.MyItemClickListener{
+            override fun onItemClick(album:Album) {
+                startAlbumFragment(album)
+            }
+        })
+
+        // 리사이클러뷰에 어댑터 연결
+        binding.homeTodayMusicAlbumRv.adapter = albumRvAdapter
+
+
+
+        // viewPagerAdapter1
         val backgroundAdapter = HomeBackgroundViewPagerAdapter(this)
 
         binding.homeBackgroundVp.adapter = backgroundAdapter
@@ -93,31 +76,17 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    private fun changeAlbumFragment(album: Album) { // fragment 간에 데이터 전달을 위해 bundle 사용
+    private fun startAlbumFragment(album: Album) { // fragment 간에 데이터 전달을 위해 bundle 사용
         (context as MainActivity).supportFragmentManager.beginTransaction()
             .replace(R.id.main_frm, AlbumFragment().apply {
-                arguments = Bundle().apply {
+                arguments = Bundle().apply { // fragment 간 데이터 교환
                     val gson = Gson()
                     val albumJson = gson.toJson(album)
                     putString("album", albumJson)
                 }
             })
             .commitAllowingStateLoss()
-
-        val sharedPreferences = this.activity?.getSharedPreferences("songList", AppCompatActivity.MODE_PRIVATE)
-        val editor = sharedPreferences?.edit()
-
-        val jsonArray = JsonArray()
-
-//        for(i:Int in 0..album.songs!!.size){
-//            jsonArray.put()
-//        }
-//        editor?.putString("songList",json)
-//        editor?.apply()
-//        Log.d("테스트",""+json)
-
-
-    }
+    }// end of startAlbumFragment
 
 
 }// end of class
