@@ -50,29 +50,29 @@ class SongActivity : AppCompatActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 
             }
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            override fun onStartTrackingTouch(seekBar: SeekBar?) { // 프로그래스바 변경을 시작하면 일단 중지
                 timer.interrupt() // 스레드 중지
-                mediaPlayer?.pause() // 미디어 플레이어 중지
+                mediaPlayer?.pause() // 미디어 플레이어 일시중지 (다시 시작하려면 .start())
             }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            override fun onStopTrackingTouch(seekBar: SeekBar?) { // 변경하고 나면
                 var positionNow = (seekBar?.progress)?.times(songs[nowPos].playTime)?.div(1000)!!
-                binding.songPlayerSb.progress = positionNow*1000/songs[nowPos].playTime
+
+                // 화면 처리
+               // binding.songPlayerSb.progress = positionNow*1000/songs[nowPos].playTime
                 binding.songTimeStartTv.text  = String.format("%02d:%02d",positionNow/60,positionNow%60)
-                if(songs[nowPos].isPlaying){ //노래가 실행중이였다면
-                    mediaPlayer?.seekTo(positionNow!!*1000) // 음악은 움직인 곳부터 실행
-                    mediaPlayer?.start()
-                    startTimer(positionNow!!)
-                }else{ // 노래가 일시정지 상태였다면
-                    mediaPlayer?.seekTo(positionNow!!*1000) // 음악은 움직인 곳부터 실행
-                    // TODO
-                    startTimer(positionNow!!)
+                mediaPlayer?.seekTo(positionNow!!*1000) // 음악은 움직인 곳부터 실행
+                mediaPlayer?.start() // 노래는 계속해서 실행
+                startTimer(positionNow!!) // 타이머도 새로 실행
+
+                if(!songs[nowPos].isPlaying){ //노래가 정지상태 였다면
+                    timer.isPlaying = false
+                    mediaPlayer?.pause()
+
                 }
             }
 
         })
-
-
 
 
 
@@ -99,14 +99,16 @@ class SongActivity : AppCompatActivity() {
         Log.d("log","SongActivity onPause()")
 
         songs[nowPos].second = (songs[nowPos].playTime*binding.songPlayerSb.progress)/1000 // progress 구현식 반대로
-        songs[nowPos].isPlaying = false
-        setPlayerStatus(false) // 정지가 되었으므로 재생 이미지로 변환
+//        songs[nowPos].isPlaying = false // 해당 노래에 대한 isPlaying 값은 false로
+//        setPlayerStatus(false) // 정지가 되었으므로 재생 이미지로 변환
 
         // sharedPreferences
         val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
         val editor = sharedPreferences.edit() // sharedPreferences 조작할때 사용을 한다.
 
-        editor.putInt("songId",songs[nowPos].id)
+        editor.putInt("songId",songs[nowPos].id) // 현재 실행중인 곡의 아이디 넘김
+        editor.putInt("second",songs[nowPos].second) // 현재 실행중인 곡의 실행 지점 넘김
+        editor.putBoolean("isPlaying",songs[nowPos].isPlaying) // 현재 실행중인 곡의 실행 여부
         editor.apply()
 
     }// end of onPause()
@@ -147,6 +149,7 @@ class SongActivity : AppCompatActivity() {
         binding.songTimeEndTv.text =
             String.format("%02d:%02d",song.playTime/60,song.playTime%60) // 노래 총 시간
         binding.songIv.setImageResource(song.coverImg!!) // 노래 이미지
+        binding.songLyricsTv.text = song.lyrics
 
         setPlayerStatus(song.isPlaying)
 //
@@ -250,6 +253,7 @@ class SongActivity : AppCompatActivity() {
             Toast.makeText(this,"마지막 곡 입니다.",Toast.LENGTH_SHORT).show()
             return
         }
+        //songs[nowPos].isPlaying = false
 
         binding.songPlayerSb.progress = 0
         binding.songTimeStartTv.text  = String.format("%02d:%02d",0,0)
@@ -261,6 +265,7 @@ class SongActivity : AppCompatActivity() {
         mediaPlayer?.release() // 미디어 플레이어가 가지고 있던 리소스 해제
         mediaPlayer = null // 미디어 플레이어 해제
         setPlayer(songs[nowPos]) // 노래 정보 바꿈
+        setPlayerStatus(true)
     }
 
 
@@ -277,6 +282,7 @@ class SongActivity : AppCompatActivity() {
     private fun initSong(){ // 처음 노래에 대한 정보 받아와서 처리
         val spf = getSharedPreferences("song", MODE_PRIVATE) // sharedPreference에서 저장된 노래 id 가져옴
         val songId = spf.getInt("songId",0) // songId 가져옴
+        val second = spf.getInt("second",0) // 실행된 시간 가져옴
 
         nowPos = getPlayingSongPosition(songId)
 

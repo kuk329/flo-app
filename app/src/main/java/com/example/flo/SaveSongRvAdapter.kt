@@ -1,15 +1,18 @@
 package com.example.flo
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flo.databinding.ItemSaveSongBinding
 
-class SaveSongRvAdapter(private val albumList : ArrayList<Album>):RecyclerView.Adapter<SaveSongRvAdapter.ViewHolder>() {
+class SaveSongRvAdapter():RecyclerView.Adapter<SaveSongRvAdapter.ViewHolder>() {
+
+    private val songs = ArrayList<Song>()
 
    // 외부 작업을 위한 클릭 인터페이스 정의
     interface  MyItemClickListener{
-        fun onRemoveAlbum(position: Int)
+        fun onRemoveSong(position: Int)
 
     }
 
@@ -25,32 +28,42 @@ class SaveSongRvAdapter(private val albumList : ArrayList<Album>):RecyclerView.A
 
         return ViewHolder(binding)
     }
-
-    fun removeItem(position: Int){ // 아이템 삭제 함수
-        albumList.removeAt(position)
-        notifyDataSetChanged() //데이터 변경 확인
-
-    }
-
     override fun onBindViewHolder(holder: SaveSongRvAdapter.ViewHolder, position: Int) {
 
-        holder.bind(albumList[position])
+        holder.bind(songs[position])
         holder.binding.itemSaveSongMoreIv.setOnClickListener {
-            mItemClickListener.onRemoveAlbum(position)
+            mItemClickListener.onRemoveSong(songs[position].id)
         }
 
     }
 
+    override fun getItemCount(): Int = songs.size
 
-    override fun getItemCount(): Int = albumList.size
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun addSongs(songs:ArrayList<Song>){
+        this.songs.clear()
+        this.songs.addAll(songs)
+
+        notifyDataSetChanged()
+    }
+
+
+
+    fun removeSong(position: Int){ // 아이템 삭제 함수
+        songs.removeAt(position)
+        notifyDataSetChanged() //데이터 변경 확인
+
+    }
+
 
    inner class ViewHolder(val binding: ItemSaveSongBinding):RecyclerView.ViewHolder(binding.root) {
 
        // bind 함수 생성
-       fun bind(album:Album){
-           binding.itemSaveSongIv.setImageResource(album.coverImg!!)
-           binding.itemSaveSongTitle.text = album.title
-           binding.itemSaveSongSinger.text = album.singer
+       fun bind(song:Song){
+           binding.itemSaveSongIv.setImageResource(song.coverImg!!)
+           binding.itemSaveSongTitle.text = song.title
+           binding.itemSaveSongSinger.text = song.singer
 
        }
 

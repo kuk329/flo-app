@@ -5,12 +5,15 @@ import android.content.Intent
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.MediaController
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.room.RoomDatabase
 import com.example.flo.databinding.ActivityMainBinding
 import com.google.gson.Gson
 
@@ -19,12 +22,19 @@ class MainActivity : AppCompatActivity() {
 
     // 전역 변수
     lateinit var binding : ActivityMainBinding
-    private var song : Song = Song() // Song
+    //private var song : Song = Song() // Song
     private var gson : Gson = Gson() //Gson
 
     // 미디어 플레이어
     private var mediaPlayer : MediaPlayer?=null
+    // Timer
+    private lateinit var timer : Timer
 
+    private var songs = ArrayList<Song>()
+
+    private lateinit var songDB : SongDatabase
+
+    private var nowPos = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,13 +49,15 @@ class MainActivity : AppCompatActivity() {
         initNavigation() // bottom Navigation 처리
         inputDummyAlbums()  // RoomDB에 데이터들 저장
         inputDummySongs() // RoomDB에 데이터들 저장
+        initPlayList() // songs 배열 초기화
+        initClickListener()
 
 
 
         binding.mainPlayerLayout.setOnClickListener { //  메인 화면에 미니 플레이어를 눌렀을때 현재 곡에대한 id sharedPreference로 저장.
-            Log.d("nowSongID",song.id.toString())
+            Log.d("nowSongID",songs[nowPos].id.toString())
             val editor = getSharedPreferences("song", MODE_PRIVATE).edit()
-            editor.putInt("songId",song.id)
+            editor.putInt("songId",songs[nowPos].id)
             editor.apply()
 
             val intent = Intent(this@MainActivity,SongActivity::class.java)
@@ -53,15 +65,17 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        binding.mainMiniplayerPlayIv.setOnClickListener {
+        binding.mainMiniplayerPlayIv.setOnClickListener { // 시작 버튼
             binding.mainMiniplayerPauseIv.visibility = View.VISIBLE
             binding.mainMiniplayerPlayIv.visibility=View.GONE
-            song.isPlaying = false
+            setMiniPlayerStatus(true)
+
         }
-        binding.mainMiniplayerPauseIv.setOnClickListener {
+        binding.mainMiniplayerPauseIv.setOnClickListener {// 중지 버튼
             binding.mainMiniplayerPlayIv.visibility = View.VISIBLE
             binding.mainMiniplayerPauseIv.visibility = View.GONE
-            song.isPlaying = true
+            setMiniPlayerStatus(false)
+
         }
 
 
@@ -77,17 +91,49 @@ class MainActivity : AppCompatActivity() {
 
         val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
         val songId = sharedPreferences.getInt("songId",0) // 진행중이던 곡의 아이디 가져옴. song db의 pk는 id로
+        val songSecond = sharedPreferences.getInt("second",0) // 진행중이던 곡의 실행 지점 가져옴.
+        val isPlaying = sharedPreferences.getBoolean("isPlaying",false)
 
-        val songDB = SongDatabase.getInstance(this)!!
-        song = if(songId==0){ // 실행중인 노래가 없었다면 테이블 첫번째 노래를 넣어줌
-            songDB.songDao().getSong(1)
-        }else{
-            songDB.songDao().getSong(songId)
-        }
-        Log.d("song ID",song.id.toString())
-        setMiniPlayer(song) //미니플레이어 데이터 렌더링
+        nowPos = getPlayingSongPosition(songId)
+        songs[nowPos].isPlaying = isPlaying
+        songs[nowPos].second = songSecond
+
+        Log.d("songll ID",songs[nowPos].id.toString())
+        Log.d("songll Second",songSecond.toString())
+
+
+        setMiniPlayer(songs[nowPos]) //미니플레이어 데이터 렌더링
+        binding.mainPlayerSb.progress = songSecond*1000/songs[nowPos].playTime
+
+        timer = Timer(songs[nowPos].playTime,songs[nowPos].isPlaying,songSecond)
+        timer.start()
+        mediaPlayer?.seekTo(songSecond*1000)
+
+          //startTimer(nowPos)
+            if(isPlaying){
+                setMiniPlayerStatus(true)
+            }
+
+
+
+//        val songDB = SongDatabase.getInstance(this)!!
+//        songs[nowPos] = if(songId==0){ // 실행중인 노래가 없었다면 테이블 첫번째 노래를 넣어줌
+//            songDB.songDao().getSong(1)
+//        }else{
+//            songDB.songDao().getSong(songId)
+//        }
+
 
     }// end of onStart()
+
+    private fun getPlayingSongPosition(songId:Int):Int{
+        for(i in 0 until songs.size){
+            if(songs[i].id==songId){
+                return i
+            }
+        }
+        return 0
+    }
 
     override fun onResume() {
         super.onResume()
@@ -103,13 +149,12 @@ class MainActivity : AppCompatActivity() {
      //   Toast.makeText(this,"MainActivity onPause()",Toast.LENGTH_SHORT).show()
         Log.d("log","MainActivity onPause()")
 
-        song.second = (binding.mainPlayerSb.progress*song.playTime)/1000 // progress 구한식에서 반대로
-
-        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        val json = gson.toJson(song)
-        editor.putString("song",json) // SongActivity에서 song 전체를 넘겼으므로 여기서도 song 전체를 넘김.
-        editor.apply()
+//        songs[nowPos].second = (binding.mainPlayerSb.progress*songs[nowPos].playTime)/1000 // progress 구한식에서 반대로
+//
+//        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
+//        val editor = sharedPreferences.edit()
+//
+//        editor.apply()
 
     }// end of onPause()
 
@@ -126,6 +171,7 @@ class MainActivity : AppCompatActivity() {
 
     }// end of onDestroy()
 
+    // --------------------------------------  function ---------------------------------------------
 
 
 
@@ -166,8 +212,7 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
-
-    }
+    }// end of initNavigation
 
     private fun setMiniPlayer(song:Song){ // 미니플레이어 데이터 렌더링 함수
         binding.mainMiniPlayerTitleTv.text = song.title
@@ -180,11 +225,125 @@ class MainActivity : AppCompatActivity() {
         if(song.isPlaying){
             binding.mainMiniplayerPauseIv.visibility = View.VISIBLE
             binding.mainMiniplayerPlayIv.visibility = View.GONE
+            //start
         }else{
             binding.mainMiniplayerPauseIv.visibility = View.GONE
             binding.mainMiniplayerPlayIv.visibility = View.VISIBLE
         }
+
+        mediaPlayer = MediaPlayer.create(this,music)
+
+
+
+    }// end of setMiniPlayer
+
+    private fun setMiniPlayerStatus(isPlaying:Boolean){
+        timer.isPlaying = isPlaying
+        songs[nowPos].isPlaying = isPlaying
+        if(isPlaying){
+            binding.mainMiniplayerPauseIv.visibility = View.VISIBLE
+            binding.mainMiniplayerPlayIv.visibility = View.GONE
+            mediaPlayer?.start() // 음악 실행
+
+
+        }else{
+            binding.mainMiniplayerPauseIv.visibility = View.GONE
+            binding.mainMiniplayerPlayIv.visibility = View.VISIBLE
+            mediaPlayer?.pause() // 음악 중지
+
+
+        }
+
     }
+
+    private fun initClickListener(){
+        binding.mainMiniPlayerNext.setOnClickListener {  // 다음 곡
+            moveSong(1)
+
+        }
+        binding.mainMiniPlayerPrev.setOnClickListener { // 이전 곡
+            moveSong(-1)
+
+        }
+    }
+
+    private fun moveSong(direct:Int){
+
+        if(nowPos+direct<0){
+            Toast.makeText(this,"첫번째 곡 입니다.",Toast.LENGTH_SHORT).show()
+            return
+        }
+        if(nowPos+direct>=songs.size){
+            Toast.makeText(this,"마지막 곡 입니다.",Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        binding.mainPlayerSb.progress = 0
+
+
+        nowPos+=direct // 현재 노래 index 변경
+
+        timer.interrupt()
+        startTimer(0)
+        mediaPlayer?.release()
+        mediaPlayer = null
+        setMiniPlayer(songs[nowPos]) // 노래 바꿈
+
+        binding.mainMiniplayerPauseIv.visibility = View.GONE
+        binding.mainMiniplayerPlayIv.visibility = View.VISIBLE
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            setMiniPlayerStatus(true)
+        },500) // 1초가 1000mills
+
+
+
+    }
+    private fun startTimer(startPos:Int){ // 현재 노래 정보를 넣어 Timer 를 다시 시작해주는 함수
+        timer = Timer(songs[nowPos].playTime,songs[nowPos].isPlaying,startPos)
+        timer.start()
+    }
+
+
+    // Thread
+    inner class Timer(private val playTime:Int ,var isPlaying:Boolean,private var second:Int):Thread(){
+
+        override fun run() {
+            try{
+                while(true){
+                    if(second>playTime){
+                        break
+                    }
+                    if(isPlaying){
+                        sleep(1000)
+                        second++
+                        runOnUiThread {
+                            binding.mainPlayerSb.progress = second*1000/playTime
+
+                        }
+                    }
+
+                }
+
+            }catch (e:InterruptedException){
+                Log.d("interrupt","스레드가 종료되었습니다.")
+            }
+
+        }
+
+    }// end of Timer class
+
+
+
+
+    private fun initPlayList(){ // 미니 플레이어 플레이 리스트 초기화
+        songDB = SongDatabase.getInstance(this)!!
+        songs.addAll(songDB.songDao().getSongs())
+    }
+
+
+
+
 
     // ROOM DB
     private fun inputDummyAlbums(){
@@ -244,16 +403,16 @@ class MainActivity : AppCompatActivity() {
         if(songs.isNotEmpty()) return // 테이블에 값이 아무것도 없으면 함수 종료
 
         // 더미 데이터
-        songDB.songDao().insert(Song("IF I","백지영",0,221,false,"music_if_i",R.drawable.song1_img))
-        songDB.songDao().insert(Song("라일락","아이유(IU)",0,214,false,"music_lilac",R.drawable.album_img1))
-        songDB.songDao().insert(Song("strawberry moon","아이유(IU)",0,205,false,"music_strawberry_moon",R.drawable.song2_img))
-        songDB.songDao().insert(Song("Yours","진",0,264,false,"music_yours",R.drawable.song6_img))
-        songDB.songDao().insert(Song("Butter","방탄소년단",0,167,false,"music_butter",R.drawable.song4_img))
-        songDB.songDao().insert(Song("Permission to Dance","방탄소년단",0,188,false,"permission_to_dance",R.drawable.song5_img))
-        songDB.songDao().insert(Song("나 그댈위해 시 한편을 쓰겠어","케이시",0,219,false,"music_strawberry_moon",R.drawable.song7_img))
-        songDB.songDao().insert(Song("너는 내 세상이었어","볼빨간사춘기",0,274,false,"you_are_my_world",R.drawable.song8_img))
-        songDB.songDao().insert(Song("나의 첫사랑","다비치",0,236,false,"music_strawberry_moon",R.drawable.song9_img))
-        songDB.songDao().insert(Song("My Universe","Coldplay & 방탄소년단",0,228,false,"music_myuniverse",R.drawable.song11_img))
+        songDB.songDao().insert(Song("IF I","백지영",0,221,false,"music_if_i",R.drawable.song1_img,"IF I.. IF I.. 사랑이면 이제 난 어떡해야 해"))
+        songDB.songDao().insert(Song("라일락","아이유(IU)",0,214,false,"music_lilac",R.drawable.album_img1,"날리는 꽃가루에 눈이 따금해(아야)"))
+        songDB.songDao().insert(Song("strawberry moon","아이유(IU)",0,205,false,"music_strawberry_moon",R.drawable.song2_img,"달이 익어가니 서둘러 젊은 피야"))
+        songDB.songDao().insert(Song("Yours","진",0,264,false,"music_yours",R.drawable.song6_img,"깊어진 하루 길어진 내 그림자 저멀리"))
+        songDB.songDao().insert(Song("Butter","방탄소년단",0,167,false,"music_butter",R.drawable.song4_img,"Smooth like butter, like a criminal undercover"))
+        songDB.songDao().insert(Song("Permission to Dance","방탄소년단",0,188,false,"permission_to_dance",R.drawable.song5_img,"It's the thought of being young "))
+        songDB.songDao().insert(Song("나 그댈위해 시 한편을 쓰겠어","케이시",0,219,false,"music_strawberry_moon",R.drawable.song7_img,"나 그댈 위해 시 한편을 쓰겠어"))
+        songDB.songDao().insert(Song("너는 내 세상이었어","볼빨간사춘기",0,274,false,"you_are_my_world",R.drawable.song8_img,"오늘만 같이 있게 해 줘 마지막이란 게"))
+        songDB.songDao().insert(Song("나의 첫사랑","다비치",0,236,false,"music_strawberry_moon",R.drawable.song9_img,"그때의 나는 너를 만나서 하나부터 열까지"))
+        songDB.songDao().insert(Song("My Universe","Coldplay & 방탄소년단",0,228,false,"music_myuniverse",R.drawable.song11_img,"You(you),you are(you are) my universe"))
 
         val _songs= songDB.songDao().getSongs() // 들어간 더미 데이터 값 확인
         Log.d("roomDB",_songs.toString())

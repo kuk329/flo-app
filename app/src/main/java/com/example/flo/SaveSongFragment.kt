@@ -11,35 +11,29 @@ import com.example.flo.databinding.FragmentSaveSongBinding
 class SaveSongFragment: Fragment() {
 
     lateinit var  binding : FragmentSaveSongBinding
-    private var albumDatas = ArrayList<Album>()
-
+    //private var albumDatas = ArrayList<Album>()
+    lateinit var songDB: SongDatabase
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-
-        binding = FragmentSaveSongBinding.inflate(inflater,container,false)
-
-
-        val saveSongAdapter = SaveSongRvAdapter(albumDatas)
-        binding.saveSongRecyclerview.adapter = saveSongAdapter
-
-
-        // 인터페이스 구현
-        saveSongAdapter.setMyItemClickListener(object : SaveSongRvAdapter.MyItemClickListener{
-            override fun onRemoveAlbum(position: Int) {
-                saveSongAdapter.removeItem(position)
-            }
-
-        })
-
 
         // layoutManager 설정
         binding.saveSongRecyclerview.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
 
 
 
-
-
-
         return binding.root
+    }// end of onCreateView
+
+    override fun onStart() {
+        super.onStart()
+        initRecyclerView()
     }
-}
+
+    private fun initRecyclerView(){
+        binding.saveSongRecyclerview.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+
+        val saveSongAdapter = SaveSongRvAdapter()
+
+    }
+
+}// end of class
