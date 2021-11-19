@@ -55,10 +55,10 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.mainPlayerLayout.setOnClickListener { //  메인 화면에 미니 플레이어를 눌렀을때 현재 곡에대한 id sharedPreference로 저장.
-            Log.d("nowSongID",songs[nowPos].id.toString())
-            val editor = getSharedPreferences("song", MODE_PRIVATE).edit()
-            editor.putInt("songId",songs[nowPos].id)
-            editor.apply()
+//            Log.d("nowSongID",songs[nowPos].id.toString())
+//            val editor = getSharedPreferences("song", MODE_PRIVATE).edit()
+//            editor.putInt("songId",songs[nowPos].id)
+//            editor.apply()
 
             val intent = Intent(this@MainActivity,SongActivity::class.java)
             startActivity(intent)
@@ -98,8 +98,8 @@ class MainActivity : AppCompatActivity() {
         songs[nowPos].isPlaying = isPlaying
         songs[nowPos].second = songSecond
 
-        Log.d("songll ID",songs[nowPos].id.toString())
-        Log.d("songll Second",songSecond.toString())
+//        Log.d("songll ID",songs[nowPos].id.toString())
+//        Log.d("songll Second",songSecond.toString())
 
 
         setMiniPlayer(songs[nowPos]) //미니플레이어 데이터 렌더링
@@ -149,12 +149,21 @@ class MainActivity : AppCompatActivity() {
      //   Toast.makeText(this,"MainActivity onPause()",Toast.LENGTH_SHORT).show()
         Log.d("log","MainActivity onPause()")
 
-//        songs[nowPos].second = (binding.mainPlayerSb.progress*songs[nowPos].playTime)/1000 // progress 구한식에서 반대로
-//
-//        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
-//        val editor = sharedPreferences.edit()
-//
-//        editor.apply()
+        songs[nowPos].second = (binding.mainPlayerSb.progress*songs[nowPos].playTime)/1000 // progress 구한식에서 반대로
+
+        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        editor.putInt("songId",songs[nowPos].id) // 현재 곡 ID
+        editor.putInt("second",songs[nowPos].second+1) // 현재 곡 진행률
+        editor.putBoolean("isPlaying",songs[nowPos].isPlaying) // 현재 곡 실행 여부
+        editor.apply()
+
+        songs[nowPos].isPlaying = false
+        timer.interrupt()
+        mediaPlayer?.release()
+        mediaPlayer = null
+
 
     }// end of onPause()
 
@@ -166,7 +175,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-     //   Toast.makeText(this,"MainActivity onDestroy()",Toast.LENGTH_SHORT).show()
+        timer.interrupt() // 스레드 해제
+        mediaPlayer?.release() // 미디어 플레이어가 갖고있던 리소스를 해제
+        mediaPlayer = null // 미디어 플레이어 해제
+
+        //   Toast.makeText(this,"MainActivity onDestroy()",Toast.LENGTH_SHORT).show()
         Log.d("log","MainActivity onDestroy()")
 
     }// end of onDestroy()

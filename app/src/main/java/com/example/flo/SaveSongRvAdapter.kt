@@ -12,7 +12,7 @@ class SaveSongRvAdapter():RecyclerView.Adapter<SaveSongRvAdapter.ViewHolder>() {
 
    // 외부 작업을 위한 클릭 인터페이스 정의
     interface  MyItemClickListener{
-        fun onRemoveSong(position: Int)
+        fun onRemoveSong(songId: Int)
 
     }
 
@@ -33,12 +33,12 @@ class SaveSongRvAdapter():RecyclerView.Adapter<SaveSongRvAdapter.ViewHolder>() {
         holder.bind(songs[position])
         holder.binding.itemSaveSongMoreIv.setOnClickListener {
             mItemClickListener.onRemoveSong(songs[position].id)
+            removeSong(position)
         }
 
     }
 
     override fun getItemCount(): Int = songs.size
-
 
     @SuppressLint("NotifyDataSetChanged")
     fun addSongs(songs:ArrayList<Song>){

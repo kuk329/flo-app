@@ -1,6 +1,7 @@
 package com.example.flo
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +12,16 @@ import com.example.flo.databinding.FragmentSaveSongBinding
 class SaveSongFragment: Fragment() {
 
     lateinit var  binding : FragmentSaveSongBinding
-    //private var albumDatas = ArrayList<Album>()
     lateinit var songDB: SongDatabase
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
 
-        // layoutManager 설정
-        binding.saveSongRecyclerview.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        binding = FragmentSaveSongBinding.inflate(inflater,container, false)
+
+        songDB = SongDatabase.getInstance(requireContext())!!
+
+
+        initRecyclerView()
 
 
 
@@ -26,13 +30,24 @@ class SaveSongFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
-        initRecyclerView()
+    //   initRecyclerView()
     }
 
     private fun initRecyclerView(){
-        binding.saveSongRecyclerview.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+        binding.saveSongRecyclerview.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
 
         val saveSongAdapter = SaveSongRvAdapter()
+
+        saveSongAdapter.setMyItemClickListener(object : SaveSongRvAdapter.MyItemClickListener{
+            override fun onRemoveSong(songId: Int) {
+                Log.d("ttt","삭제될 노래 id: "+songId.toString())
+                songDB.songDao().updateIsLikeById(false,songId)
+            }
+        })
+        binding.saveSongRecyclerview.adapter = saveSongAdapter
+
+        saveSongAdapter.addSongs(songDB.songDao().getLikedSongs(true) as ArrayList)
+        Log.d("ttt",songDB.songDao().getLikedSongs(true).toString())
 
     }
 

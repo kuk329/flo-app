@@ -39,7 +39,7 @@ class SongActivity : AppCompatActivity() {
 
 
         initPlayList() // DB에서 가져온 데이터 songs 배열에 저장.
-        initSong()
+
         initClickListener()
         seekBarListener()
 
@@ -82,6 +82,7 @@ class SongActivity : AppCompatActivity() {
         super.onStart()
     //    Toast.makeText(this,"SongActivity onStart()",Toast.LENGTH_SHORT).show()
         Log.d("log","SongActivity onStart()")
+        initSong()
 
     }
 
@@ -107,7 +108,7 @@ class SongActivity : AppCompatActivity() {
         val editor = sharedPreferences.edit() // sharedPreferences 조작할때 사용을 한다.
 
         editor.putInt("songId",songs[nowPos].id) // 현재 실행중인 곡의 아이디 넘김
-        editor.putInt("second",songs[nowPos].second) // 현재 실행중인 곡의 실행 지점 넘김
+        editor.putInt("second",songs[nowPos].second+1) // 현재 실행중인 곡의 실행 지점 넘김
         editor.putBoolean("isPlaying",songs[nowPos].isPlaying) // 현재 실행중인 곡의 실행 여부
         editor.apply()
 
@@ -138,7 +139,7 @@ class SongActivity : AppCompatActivity() {
     // ------------------------------- 함수 -----------------------------------------
 
 
-    private fun setPlayer(song:Song){ // 곡 실행에 대한 처리. 노래에 대한 정보를 받아와서
+    private fun setPlayer(song:Song){ // 해당 노래 데이터 렌더링 처리 & mediaPlayer 정보 초기화
         val music = resources.getIdentifier(song.music,"raw",this.packageName)
 
         // 데이터 렌더링
@@ -283,13 +284,26 @@ class SongActivity : AppCompatActivity() {
         val spf = getSharedPreferences("song", MODE_PRIVATE) // sharedPreference에서 저장된 노래 id 가져옴
         val songId = spf.getInt("songId",0) // songId 가져옴
         val second = spf.getInt("second",0) // 실행된 시간 가져옴
+        val isPlaying  = spf.getBoolean("isPlaying",false)
 
-        nowPos = getPlayingSongPosition(songId)
+        nowPos = getPlayingSongPosition(songId) // 해당 곡에 대한 songs[]배열에서의 index위치 가져옴.
+        binding.songPlayerSb.progress = second*1000/songs[nowPos].playTime
+        binding.songTimeStartTv.text  = String.format("%02d:%02d",second/60,second%60)
+        songs[nowPos].isPlaying = isPlaying
+        songs[nowPos].second = second
+        //Log.d("now Song ID",songs[nowPos].id.toString())
 
-        Log.d("now Song ID",songs[nowPos].id.toString())
-
-        startTimer(0) // 스레드에대한 함수 -> 매개변수로 노래의 실행지점 받아옴.
+        startTimer(second) // 스레드에대한 함수 -> 매개변수로 노래의 실행지점 받아옴.
+        timer.isPlaying = false
         setPlayer(songs[nowPos]) // 미디어 처리 함수에 현재 곡에대한 정보 넘김
+        mediaPlayer?.seekTo(second*1000)
+
+        if(isPlaying){
+            setPlayerStatus(true)
+        }
+
+
+
     }// end of initSong()
 
     private fun getPlayingSongPosition(songId:Int):Int{
@@ -317,8 +331,13 @@ class SongActivity : AppCompatActivity() {
         }
     }
     fun setPlayerStatus(isPlaying: Boolean){ // 현재 재생 여부 (isPlaying 값) 에 따라 정지와 실행 이미지가 바뀌도록 하는 함수.
+//        if(!timer.isAlive){
+//            startTimer(0)
+////            val music = resources.getIdentifier(songs[nowPos].music,"raw",this.packageName)
+////            mediaPlayer = MediaPlayer.create(this,music)
+//        }
         timer.isPlaying = isPlaying // timer 실행여부 변경
-        songs[nowPos].isPlaying = isPlaying // 현재 노래의 실행 여부
+        songs[nowPos].isPlaying = isPlaying // 현재 노래의 실행 여부 저장
 
         if(isPlaying){ // true
             binding.songPlayIv.visibility = View.GONE // 재생 이미지 사라짐
@@ -357,8 +376,12 @@ class SongActivity : AppCompatActivity() {
                                 setPlayerStatus(true) // 정지 버튼 이미지로 바뀜
 
                             }
-                            else-> // 반복 안함. track = 0
-                                break
+                            else->{ // 반복 안함. track = 0
+                               // mediaPlayer?.release()
+                               // mediaPlayer = null
+                                setPlayerStatus(false)
+                             //   break
+                            }
                         }
                     }
                     if(isPlaying){ // isPlaying이 true 일때만 실행

@@ -26,11 +26,6 @@ class LockerFragment : Fragment() {
 
 
 
-
-
-
-
-
         val adapter =  LockerViewPageAdapter(this)
         binding.lockerVp.adapter = adapter
 
