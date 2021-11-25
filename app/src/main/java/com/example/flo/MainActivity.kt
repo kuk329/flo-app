@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     // Timer
     private lateinit var timer : Timer
 
+
     private var songs = ArrayList<Song>()
 
     private lateinit var songDB : SongDatabase

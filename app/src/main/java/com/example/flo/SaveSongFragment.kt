@@ -15,14 +15,14 @@ class SaveSongFragment: Fragment() {
     lateinit var songDB: SongDatabase
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-
         binding = FragmentSaveSongBinding.inflate(inflater,container, false)
 
         songDB = SongDatabase.getInstance(requireContext())!!
 
 
-        initRecyclerView()
+      //  initRecyclerView()
 
+        Log.d("test123","onCreateView call")
 
 
         return binding.root
@@ -30,9 +30,26 @@ class SaveSongFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
-    //   initRecyclerView()
+        Log.d("test123","onStart call")
+       initRecyclerView()
     }
 
+    override fun onPause() {
+
+        super.onPause()
+        Log.d("test123","onPause call")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("test123","onStop call")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("test123","onDestroyView call")
+
+    }
     private fun initRecyclerView(){
         binding.saveSongRecyclerview.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
 

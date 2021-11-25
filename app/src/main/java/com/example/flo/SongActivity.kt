@@ -331,11 +331,11 @@ class SongActivity : AppCompatActivity() {
         }
     }
     fun setPlayerStatus(isPlaying: Boolean){ // 현재 재생 여부 (isPlaying 값) 에 따라 정지와 실행 이미지가 바뀌도록 하는 함수.
-//        if(!timer.isAlive){
-//            startTimer(0)
-////            val music = resources.getIdentifier(songs[nowPos].music,"raw",this.packageName)
-////            mediaPlayer = MediaPlayer.create(this,music)
-//        }
+        if(!timer.isAlive){
+            startTimer(0)
+            val music = resources.getIdentifier(songs[nowPos].music,"raw",this.packageName)
+            mediaPlayer = MediaPlayer.create(this,music)
+        }
         timer.isPlaying = isPlaying // timer 실행여부 변경
         songs[nowPos].isPlaying = isPlaying // 현재 노래의 실행 여부 저장
 
@@ -369,18 +369,18 @@ class SongActivity : AppCompatActivity() {
                         sleep(2000) // 2초후
                         when(track){
                             1->runOnUiThread{ // 재시작(현재곡 반복)
+                                mediaPlayer?.seekTo(0)
                                 setPlayerStatus(true) // 노래 실행
                             }
                             2->runOnUiThread{ // 순서대로 실행
                                 moveSong(1) // 다음곡으로 바꿈
                                 setPlayerStatus(true) // 정지 버튼 이미지로 바뀜
-
                             }
                             else->{ // 반복 안함. track = 0
-                               // mediaPlayer?.release()
-                               // mediaPlayer = null
+                                mediaPlayer?.release()
+                                mediaPlayer = null
                                 setPlayerStatus(false)
-                             //   break
+                                break
                             }
                         }
                     }

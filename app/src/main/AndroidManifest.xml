@@ -11,6 +11,8 @@
         android:theme="@style/MyTheme">
         <activity android:name="com.example.flo.MainActivity">
         </activity>
+        <activity android:name=".SignUpActivity"/>
+        <activity android:name=".LoginActivity"/>
         <activity android:name=".SongActivity"/>
         <activity android:name=".SplashActivity">
             <intent-filter>
