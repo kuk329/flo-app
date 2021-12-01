@@ -34,8 +34,8 @@ class LockerFragment : Fragment() {
             tab.text=information[position]
         }.attach()
 
-
         return binding.root
+
     } // end of onCreateView
 
     override fun onStart() {
@@ -76,7 +76,6 @@ class LockerFragment : Fragment() {
         editor.remove("jwt")
         editor.apply()
     }// logout()
-
 
 
 }

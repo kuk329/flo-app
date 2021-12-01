@@ -10,7 +10,7 @@ class LockerViewPageAdapter(fragment:Fragment):FragmentStateAdapter(fragment) {
         return when(position){
             0->SaveSongFragment()
             1->SaveMusicFileFragment()
-            else-> SaveAlbumFragment()
+            else-> SavedAlbumFragment()
 
         }
     }

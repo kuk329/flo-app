@@ -54,6 +54,16 @@
         android:layout_marginTop="50dp"/>
 
     <EditText
+        android:id="@+id/sign_up_name_et"
+        android:hint="이름(닉네임)"
+        android:layout_margin="20dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_email_et"/>
+
+    <EditText
         android:inputType="textPassword"
         android:drawableEnd="@drawable/edittext_password_img"
         android:id="@+id/sign_up_password_et"
@@ -61,7 +71,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_up_email_et"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_name_et"
         android:layout_margin="20dp"
         android:hint="비밀번호"/>
     <EditText
@@ -75,6 +85,16 @@
         app:layout_constraintTop_toBottomOf="@+id/sign_up_password_et"
         android:layout_margin="20dp"
         android:hint="비밀번호 확인"/>
+    <TextView
+        android:visibility="invisible"
+        android:id="@+id/sign_up_error_tv"
+        android:textColor="#E91E63"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_password_check_et"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sign_up_btn"
@@ -86,5 +106,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
+    <ProgressBar
+        android:id="@+id/sign_up_loading_pb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:indeterminateTint="@color/flo_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

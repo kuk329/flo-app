@@ -157,7 +157,7 @@ class SongActivity : AppCompatActivity() {
         if(song.isLike){ // 좋아요 렌더링
             binding.songMyLikeIv.setImageResource(R.drawable.ic_my_like_on)
         }else{
-            binding.songMyLikeIv.setImageResource(R.drawable.ic_my_like_off)
+            binding.songMyLikeIv.setImageResource(R.drawable.ic_my_like_off_)
         }
 
         mediaPlayer = MediaPlayer.create(this,music)
@@ -320,7 +320,7 @@ class SongActivity : AppCompatActivity() {
         songDB.songDao().updateIsLikeById(!isLike,songs[nowPos].id)
 
         if(isLike){ // 좋아요 X
-            binding.songMyLikeIv.setImageResource(R.drawable.ic_my_like_off)
+            binding.songMyLikeIv.setImageResource(R.drawable.ic_my_like_off_)
             CustomToast.createToast(context,"좋아요 한 곡이 취소되었습니다.")?.show()
 
            // Toast.makeText(this,"좋아요 한 곡에 담겼습니다.",Toast.LENGTH_SHORT).show()

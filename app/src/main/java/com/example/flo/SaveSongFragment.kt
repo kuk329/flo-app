@@ -63,7 +63,7 @@ class SaveSongFragment: Fragment() {
         })
         binding.saveSongRecyclerview.adapter = saveSongAdapter
 
-        saveSongAdapter.addSongs(songDB.songDao().getLikedSongs(true) as ArrayList)
+        saveSongAdapter.addSongs(songDB.songDao().getLikedSongs(true) as ArrayList) // songList 추가
         Log.d("ttt",songDB.songDao().getLikedSongs(true).toString())
 
     }
