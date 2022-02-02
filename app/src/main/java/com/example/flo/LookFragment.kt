@@ -1,6 +1,7 @@
 package com.example.flo
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,8 @@ import com.example.flo.databinding.FragmentLookBinding
 
 class LookFragment : Fragment(), LookView {
 
-    lateinit var binding: FragmentLookBinding
+    private lateinit var binding: FragmentLookBinding
+    private lateinit var songRvAdapter: SongRvAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,18 +23,50 @@ class LookFragment : Fragment(), LookView {
         return binding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        initRecyclerView()
+        getSongs()
+    }
+
+    private fun initRecyclerView(){
+        // layoutManager 설정은 xml 파일에서 처리함.
+        songRvAdapter = SongRvAdapter(requireContext())
+        binding.lookFragmentRecyclerView.adapter = songRvAdapter
+    }
+
+    private fun getSongs(){
+        val songService = SongService()
+
+        songService.setLookView(this)
+
+        songService.getSongs()
+
+
+    }
+
+
+
     // LookView interface
 
     override fun onGetSongsLoading() {
-        TODO("Not yet implemented")
+        binding.fragmentLookProgressBar.visibility = View.VISIBLE
     }
 
-    override fun onGetSongsSuccess() {
-        TODO("Not yet implemented")
+    override fun onGetSongsSuccess(songs:ArrayList<Song>) {
+        binding.fragmentLookProgressBar.visibility = View.GONE
+
+        songRvAdapter.addSongs(songs)
     }
 
     override fun onGetSongsFailure(code: Int, message: String) {
-        TODO("Not yet implemented")
+        binding.fragmentLookProgressBar.visibility = View.GONE
+
+        when(code){
+            400 -> Log.d("LookFrag/API-ERROR",message)
+
+        }
     }
 
 

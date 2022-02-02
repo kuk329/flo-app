@@ -417,16 +417,16 @@ class MainActivity : AppCompatActivity() {
         if(songs.isNotEmpty()) return // 테이블에 값이 아무것도 없으면 함수 종료
 
         // 더미 데이터
-        songDB.songDao().insert(Song("IF I","백지영",0,221,false,"music_if_i",R.drawable.song1_img,"IF I.. IF I.. 사랑이면 이제 난 어떡해야 해"))
-        songDB.songDao().insert(Song("라일락","아이유(IU)",0,214,false,"music_lilac",R.drawable.album_img1,"날리는 꽃가루에 눈이 따금해(아야)"))
-        songDB.songDao().insert(Song("strawberry moon","아이유(IU)",0,205,false,"music_strawberry_moon",R.drawable.song2_img,"달이 익어가니 서둘러 젊은 피야"))
+        songDB.songDao().insert(Song("IF I","백지영",0,221,false,"music_if_i",R.drawable.song1_img,"","IF I.. IF I.. 사랑이면 이제 난 어떡해야 해"))
+        songDB.songDao().insert(Song("라일락","아이유(IU)",0,214,false,"music_lilac",R.drawable.album_img1,"","날리는 꽃가루에 눈이 따금해(아야)"))
+        songDB.songDao().insert(Song("strawberry moon","아이유(IU)",0,205,false,"music_strawberry_moon",R.drawable.song2_img,"","달이 익어가니 서둘러 젊은 피야"))
         songDB.songDao().insert(Song("Yours","진",0,264,false,"music_yours",R.drawable.song6_img,"깊어진 하루 길어진 내 그림자 저멀리"))
-        songDB.songDao().insert(Song("Butter","방탄소년단",0,167,false,"music_butter",R.drawable.song4_img,"Smooth like butter, like a criminal undercover"))
-        songDB.songDao().insert(Song("Permission to Dance","방탄소년단",0,188,false,"permission_to_dance",R.drawable.song5_img,"It's the thought of being young "))
-        songDB.songDao().insert(Song("나 그댈위해 시 한편을 쓰겠어","케이시",0,219,false,"music_strawberry_moon",R.drawable.song7_img,"나 그댈 위해 시 한편을 쓰겠어"))
-        songDB.songDao().insert(Song("너는 내 세상이었어","볼빨간사춘기",0,274,false,"you_are_my_world",R.drawable.song8_img,"오늘만 같이 있게 해 줘 마지막이란 게"))
-        songDB.songDao().insert(Song("나의 첫사랑","다비치",0,236,false,"music_strawberry_moon",R.drawable.song9_img,"그때의 나는 너를 만나서 하나부터 열까지"))
-        songDB.songDao().insert(Song("My Universe","Coldplay & 방탄소년단",0,228,false,"music_myuniverse",R.drawable.song11_img,"You(you),you are(you are) my universe"))
+        songDB.songDao().insert(Song("Butter","방탄소년단",0,167,false,"music_butter",R.drawable.song4_img,"","Smooth like butter, like a criminal undercover"))
+        songDB.songDao().insert(Song("Permission to Dance","방탄소년단",0,188,false,"permission_to_dance",R.drawable.song5_img,"","It's the thought of being young "))
+        songDB.songDao().insert(Song("나 그댈위해 시 한편을 쓰겠어","케이시",0,219,false,"music_strawberry_moon",R.drawable.song7_img,"","나 그댈 위해 시 한편을 쓰겠어"))
+        songDB.songDao().insert(Song("너는 내 세상이었어","볼빨간사춘기",0,274,false,"you_are_my_world",R.drawable.song8_img,"","오늘만 같이 있게 해 줘 마지막이란 게"))
+        songDB.songDao().insert(Song("나의 첫사랑","다비치",0,236,false,"music_strawberry_moon",R.drawable.song9_img,"","그때의 나는 너를 만나서 하나부터 열까지"))
+        songDB.songDao().insert(Song("My Universe","Coldplay & 방탄소년단",0,228,false,"music_myuniverse",R.drawable.song11_img,"","You(you),you are(you are) my universe"))
 
         val _songs= songDB.songDao().getSongs() // 들어간 더미 데이터 값 확인
         Log.d("roomDB",_songs.toString())

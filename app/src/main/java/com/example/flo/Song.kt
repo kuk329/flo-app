@@ -13,6 +13,7 @@ data class Song(
     var isPlaying: Boolean = false, // 실행 여부
     var music: String = "", // 음악 파일명
     var coverImg: Int? = null, // 이미지 소스
+    var coverImgUrl:String?=null, // 서버에서 받아오는 이미지 url
     var lyrics : String = "", // 가사
     var isLike: Boolean = false, // 좋아요 여부
     var albumIdx: Int = 0 // 이 song이 어떤 앨범에 담겨 있는지 가리키는 변수 (foreign key 역할)
