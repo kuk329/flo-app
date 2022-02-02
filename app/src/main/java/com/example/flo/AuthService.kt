@@ -38,6 +38,7 @@ class AuthService {
                 val resp = response.body()!!
 
                 Log.d("test-success",resp.toString())
+                Log.d("test-success",resp.message.toString())
 
                 when(resp.code){
                     1000 -> signUpView.onSignUpSuccess()

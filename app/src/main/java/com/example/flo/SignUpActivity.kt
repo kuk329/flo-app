@@ -30,7 +30,7 @@ class SignUpActivity:AppCompatActivity(),SignUpView {
     }// end of onCreate
 
     private fun getUser():User{
-        val email :String = binding.signUpIdEt.text.toString()+"@"+binding.signUpEmailEt.text.toString()
+        val email :String = binding.signUpIdEt.text.toString()+"@"+binding.signUpEmailEt.text.toString().trim()
         val password : String = binding.signUpPasswordEt.text.toString()
         val name : String = binding.signUpNameEt.text.toString()
 
@@ -112,7 +112,7 @@ class SignUpActivity:AppCompatActivity(),SignUpView {
 
         when(code){
             2016,2017 ->{
-                binding.signUpEmailEt.visibility = View.VISIBLE
+                binding.signUpErrorTv.visibility = View.VISIBLE
                 binding.signUpErrorTv.text = message
             }
         }

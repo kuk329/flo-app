@@ -35,7 +35,7 @@ class SavedAlbumFragment: Fragment() {
 
     private fun initRecyclerView(){
 
-        val userId = getJwt()
+        val userId = getUserIdx(requireContext())
 
         binding.savedAlbumRecyclerview.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
 
@@ -51,10 +51,10 @@ class SavedAlbumFragment: Fragment() {
         albumRvAdapter.addSongs(albumDB.albumDao().getLikedAlbums(userId) as ArrayList)
 
     }
-    private fun getJwt():Int{
-        val spf = activity?.getSharedPreferences("auth",AppCompatActivity.MODE_PRIVATE)
-        val userId = spf!!.getInt("jwt",0)
-        return userId
-    }
+//    private fun getJwt():Int{
+//        val spf = activity?.getSharedPreferences("auth",AppCompatActivity.MODE_PRIVATE)
+//        val userId = spf!!.getInt("jwt",0)
+//        return userId
+//    }
 
 }// end of class

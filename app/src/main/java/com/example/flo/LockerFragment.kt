@@ -45,7 +45,7 @@ class LockerFragment : Fragment() {
     }
 
     private fun initView(){ // 로그인이 되어있을떄 아닐때 화면 처리
-        val jwt = getJwt()
+        val jwt = getUserIdx(requireContext())
 
         if(jwt==0){
             binding.lockerLoginTv.text = "로그인"
@@ -63,17 +63,17 @@ class LockerFragment : Fragment() {
 
     }
 
-    private fun getJwt():Int{
-        val spf = activity?.getSharedPreferences("auth",AppCompatActivity.MODE_PRIVATE)
-
-        return spf!!.getInt("jwt",0)
-    }
+//    private fun getJwt():Int{
+//        val spf = activity?.getSharedPreferences("auth",AppCompatActivity.MODE_PRIVATE)
+//
+//        return spf!!.getInt("jwt",0)
+//    }
 
     private fun logout(){
         val spf  = activity?.getSharedPreferences("auth",AppCompatActivity.MODE_PRIVATE)
 
         val editor = spf!!.edit()
-        editor.remove("jwt")
+        editor.remove("userIdx")
         editor.apply()
     }// logout()
 

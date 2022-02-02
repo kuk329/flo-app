@@ -71,7 +71,7 @@ class LoginActivity:AppCompatActivity(),LoginView {
             Toast.makeText(this,"비밀번호를 입력해 주세요.", Toast.LENGTH_SHORT).show()
             return
         }
-        val email :String = binding.loginIdEt.text.toString()+"@"+binding.loginEmailEt.text.toString()
+        val email :String = binding.loginIdEt.text.toString()+"@"+binding.loginEmailEt.text.toString().trim()
         val password : String = binding.loginPasswordEt.text.toString()
 
         val user = User(email,password,"")
@@ -92,19 +92,19 @@ class LoginActivity:AppCompatActivity(),LoginView {
         startActivity(intent)
     }
 
-    private fun saveJwt(jwt:String){
-        val spf = getSharedPreferences("auth", MODE_PRIVATE)
-        val editor = spf.edit()
-        editor.putString("jwt",jwt)
-        editor.apply()
-    }
-
-    private fun saveUserIdx(jwt:Int){
-        val spf = getSharedPreferences("auth", MODE_PRIVATE)
-        val editor = spf.edit()
-        editor.putInt("jwt",jwt)
-        editor.apply()
-    }
+//    private fun saveJwt(jwt:String){
+//        val spf = getSharedPreferences("auth", MODE_PRIVATE)
+//        val editor = spf.edit()
+//        editor.putString("jwt",jwt)
+//        editor.apply()
+//    }
+//
+//    private fun saveUserIdx(jwt:Int){
+//        val spf = getSharedPreferences("auth", MODE_PRIVATE)
+//        val editor = spf.edit()
+//        editor.putInt("useIdx",jwt)
+//        editor.apply()
+//    }
     override fun onLoginLoading() {
         binding.loginLoadingPb.visibility = View.VISIBLE
 
@@ -113,8 +113,8 @@ class LoginActivity:AppCompatActivity(),LoginView {
     override fun onLoginSuccess(auth:Auth) {
         binding.loginLoadingPb.visibility = View.GONE
 
-        saveJwt(auth.jwt)
-        saveUserIdx(auth.userIdx) // Room DB 충돌 방지
+        saveJwt(this,auth.jwt)
+        saveUserIdx(this,auth.userIdx) // Room DB 충돌 방지
 
         startMainActivity()
     }

@@ -73,12 +73,12 @@ class AlbumFragment : Fragment() {
         if(isLiked){
             binding.albumLikeIv.setImageResource(R.drawable.ic_my_like_on)
         }else{
-            binding.albumAlbumIv.setImageResource(R.drawable.ic_my_like_off_)
+            binding.albumLikeIv.setImageResource(R.drawable.ic_my_like_off_)
         }
     }
 
     private fun setClickListeners(album:Album){
-        val userId:Int = getJwt()
+        val userId:Int = getUserIdx(requireContext())
 
         binding.albumLikeIv.setOnClickListener {
             if(isLiked){ // 좋아요가 이미 되어있을때 한번 더 누르면 -> 좋아요 취소
@@ -101,7 +101,7 @@ class AlbumFragment : Fragment() {
 
     private fun isLikedAlbum(albumId:Int):Boolean{
         val songDB = SongDatabase.getInstance(requireContext())!!
-        val userId = getJwt() // 현재 로그인한 유저 아이디(jwt) 가져옴
+        val userId = getUserIdx(requireContext()) // 현재 로그인한 유저 아이디(jwt) 가져옴
 
         val likeId :Int? = songDB.albumDao().isLikeAlbum(userId,albumId)
 
@@ -118,11 +118,11 @@ class AlbumFragment : Fragment() {
 
     }
 
-    private fun getJwt():Int{
-        val spf = activity?.getSharedPreferences("auth",AppCompatActivity.MODE_PRIVATE)
-
-        return spf!!.getInt("jwt",0)
-    }
+//    private fun getJwt():Int{
+//        val spf = activity?.getSharedPreferences("auth",AppCompatActivity.MODE_PRIVATE)
+//
+//        return spf!!.getInt("jwt",0)
+//    }
 
 
     // Room DB

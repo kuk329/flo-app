@@ -72,7 +72,6 @@ class HomeFragment : Fragment() {
         binding.homeBannerVp.orientation =ViewPager2.ORIENTATION_HORIZONTAL // 좌우 상하 스크롤을 지정 (default 는 좌우)
 
 
-
         return binding.root
     }
 
